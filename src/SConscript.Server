@@ -9,13 +9,13 @@ envCopy.Append(
                 CPPPATH = '.'
               )
 
-sourceTargets = [ # nothing to build yet
-                  ]
+sourceTargets = [ 'main.cpp' ]
 
 targets = []
 for source in sourceTargets:
-  targets.append(modelDir + '/' + source)
+  targets.append(dir + '/' + source)
 
-library = envCopy.Library('Server',targets)
+program = envCopy.Program(target = '../bin/Server',
+                          source = targets)
 
-Return( 'library' )
+Return( 'program' )

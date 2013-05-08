@@ -14,8 +14,9 @@ sourceTargets = [ # nothing to build yet
 
 targets = []
 for source in sourceTargets:
-  targets.append(modelDir + '/' + source)
+  targets.append(dir + '/' + source)
 
-program = envCopy.Program('Client',targets)
+program = envCopy.Program(target = '../bin/Client',
+                          source = targets)
 
 Return( 'program' )
