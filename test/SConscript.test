@@ -1,0 +1,26 @@
+# vim ft=python
+
+Import('env')
+
+envCopy = env.Clone()
+
+serverDir = 'Server'
+
+envCopy.Append(
+                CPPPATH = '../src/',
+              )
+
+
+modelSourceTargets = [ 'serverTest.cpp',
+                       ]
+
+targets = []
+for source in modelSourceTargets:
+  targets.append(serverDir + '/' + source)
+
+# Build one or more test runners.
+program = envCopy.Program('test', targets, LIBS=['boost_unit_test_framework'])
+# Depend on the runner to ensure that it's built before running it - Note: using abspath.
+test_alias = Alias('test', [program], program[0].abspath)
+# Simply required.  Without it, 'test' is never considered out of date.
+envCopy.AlwaysBuild(test_alias)

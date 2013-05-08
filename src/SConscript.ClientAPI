@@ -1,0 +1,21 @@
+# vim: ft=python
+
+Import('env')
+
+dir = 'ClientAPI'
+
+envCopy = env.Clone()
+envCopy.Append(
+                CPPPATH = '.'
+              )
+
+sourceTargets = [ # nothing to build yet
+                  ]
+
+targets = []
+for source in sourceTargets:
+  targets.append(dir + '/' + source)
+
+library = envCopy.Library('ClientAPI',targets)
+
+Return( 'library' )
