@@ -9,7 +9,9 @@ envCopy.Append(
                 CPPPATH = '.'
               )
 
-sourceTargets = [ 'main.cpp' ]
+sourceTargets = [ 'Common/Field.cpp',
+                  'Common/FieldCondition.cpp',
+                  'main.cpp' ]
 
 targets = []
 for source in sourceTargets:
