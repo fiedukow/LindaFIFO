@@ -9,7 +9,7 @@ envCopy.Append(
                 CPPPATH = '.'
               )
 
-sourceTargets = [ # nothing to build yet
+sourceTargets = [ 'main.cpp'
                   ]
 
 targets = []
