@@ -1,0 +1,24 @@
+# vim: ft=python
+
+Import('env')
+
+dir = 'Server'
+
+envCopy = env.Clone()
+envCopy.Append(
+                CPPPATH = '.'
+              )
+
+sourceTargets = [ 'Common/Field.cpp',
+                  'Common/FieldCondition.cpp',
+                  'Common/QueryStructures.cpp',
+                  'Database.cpp',
+                  'Exceptions.cpp' ]
+
+targets = []
+for source in sourceTargets:
+  targets.append(dir + '/' + source)
+
+library = envCopy.Library('ServerAPI',targets)
+
+Return( 'library' )

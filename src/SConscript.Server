@@ -9,18 +9,15 @@ envCopy.Append(
                 CPPPATH = '.'
               )
 
-sourceTargets = [ 'Common/Field.cpp',
-                  'Common/FieldCondition.cpp',
-                  'Common/QueryStructures.cpp',
-                  'Database.cpp',
-                  'Exceptions.cpp',
-                  'main.cpp' ]
+sourceTargets = [ 'main.cpp' ]
 
 targets = []
 for source in sourceTargets:
   targets.append(dir + '/' + source)
 
 program = envCopy.Program(target = '../bin/Server',
-                          source = targets)
+                          source = targets,
+                          LIBS = [ 'ServerAPI' ],
+                          LIBPATH = [ '.' ])
 
 Return( 'program' )

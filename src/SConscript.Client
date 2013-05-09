@@ -17,6 +17,8 @@ for source in sourceTargets:
   targets.append(dir + '/' + source)
 
 program = envCopy.Program(target = '../bin/Client',
-                          source = targets)
+                          source = targets,
+                          LIBS = [ 'ClientAPI' ],
+                          LIBPATH = [ '.' ])
 
 Return( 'program' )
