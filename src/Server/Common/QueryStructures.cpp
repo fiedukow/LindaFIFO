@@ -21,6 +21,20 @@ SelectDescription::~SelectDescription()
   }
 }
 
+bool SelectDescription::doesTupleMatch(const Tuple& tuple) const
+{
+  for (Field* field : tuple)
+  {
+    for (FieldCondition* condition : fieldConditions)
+    {
+      if (!field->accept(*condition))
+        return false;
+    }
+  }
+
+  return true;
+}
+
 InsertDescription::InsertDescription(const Tuple& tuple)
   : tuple(new Tuple(tuple))
 {}

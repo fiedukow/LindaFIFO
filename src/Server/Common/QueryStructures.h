@@ -22,6 +22,8 @@ struct SelectDescription
   SelectDescription(const FieldConditions&);
   ~SelectDescription();
 
+  bool doesTupleMatch(const Tuple& tuple) const;
+
   const FieldConditions fieldConditions;
 };
 

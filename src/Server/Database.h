@@ -1,7 +1,7 @@
 #ifndef SERVER_DATABASE_H
 #define SERVER_DATABASE_H
 
-#include <vector>
+#include <set>
 
 #include "Common/QueryStructures.h" // for Tuple typedef
 
@@ -34,12 +34,15 @@ public:
    */
   void output(const Common::InsertDescription&);
 
-private:
-  typedef std::vector<Common::Tuple> TuplesCollection;
+  std::size_t getTuplesCount() const;
 
-  TuplesCollection::iterator
+private:
+  typedef std::set<Common::Tuple> TuplesCollection;
+
+  // non-deterministically chooses first match for description
+  TuplesCollection::const_iterator
     getPositionOfTuple(const Common::SelectDescription&) const;
-  void removeTupleByPosition(TuplesCollection::iterator position);
+  void removeTupleByPosition(TuplesCollection::const_iterator position);
 
   TuplesCollection tuplesCollection;
 };

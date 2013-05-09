@@ -12,6 +12,7 @@ envCopy.Append(
 
 
 modelSourceTargets = [ 'serverTest.cpp',
+                       'Database.cpp'
                        ]
 
 targets = []
@@ -19,7 +20,7 @@ for source in modelSourceTargets:
   targets.append(serverDir + '/' + source)
 
 # Build one or more test runners.
-program = envCopy.Program('test', targets, LIBS=['boost_unit_test_framework'])
+program = envCopy.Program('test', targets, LIBS=['boost_unit_test_framework', 'Server'],LIBPATH='../build')
 # Depend on the runner to ensure that it's built before running it - Note: using abspath.
 test_alias = Alias('test', [program], program[0].abspath)
 # Simply required.  Without it, 'test' is never considered out of date.
