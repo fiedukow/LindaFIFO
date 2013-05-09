@@ -27,7 +27,7 @@ bool SelectDescription::doesTupleMatch(const Tuple& tuple) const
   {
     for (FieldCondition* condition : fieldConditions)
     {
-      if (!field->accept(*condition))
+      if (!field->accept(*condition)) // indeterminate won't match this condition
         return false;
     }
   }

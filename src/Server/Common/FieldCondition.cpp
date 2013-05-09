@@ -8,11 +8,16 @@ namespace Server
 namespace Common
 {
 
-IntFieldCondition::IntFieldCondition(const int value)
-  : value(value)
+FieldCondition::FieldCondition(ConditionType conditionType)
+  : conditionType(conditionType)
 {}
 
-bool IntFieldCondition::visit(const IntField& field) const
+IntFieldCondition::IntFieldCondition(const int value, ConditionType conditionType)
+  : FieldCondition(conditionType),
+    value(value)
+{}
+
+boost::logic::tribool IntFieldCondition::visit(const IntField& field) const
 {
   int fieldValue = field.getValue();
 
@@ -29,26 +34,27 @@ bool IntFieldCondition::visit(const IntField& field) const
   }
 }
 
-bool IntFieldCondition::visit(const FloatField& /*field*/) const
+boost::logic::tribool IntFieldCondition::visit(const FloatField& /*field*/) const
 {
-  return false; // float field never matches integral condition
+  return boost::logic::indeterminate;
 }
 
-bool IntFieldCondition::visit(const StringField& /*field*/) const
+boost::logic::tribool IntFieldCondition::visit(const StringField& /*field*/) const
 {
-  return false;
+  return boost::logic::indeterminate;
 }
 
-bool FloatFieldCondition::visit(const IntField& /*field*/) const
-{
-  return false;
-}
-
-FloatFieldCondition::FloatFieldCondition(const float value)
-  : value(value)
+FloatFieldCondition::FloatFieldCondition(const float value, ConditionType conditionType)
+  : FieldCondition(conditionType),
+    value(value)
 {}
 
-bool FloatFieldCondition::visit(const FloatField& field) const
+boost::logic::tribool FloatFieldCondition::visit(const IntField& /*field*/) const
+{
+  return boost::logic::indeterminate;
+}
+
+boost::logic::tribool FloatFieldCondition::visit(const FloatField& field) const
 {
   float fieldValue = field.getValue();
 
@@ -65,26 +71,27 @@ bool FloatFieldCondition::visit(const FloatField& field) const
   }
 }
 
-bool FloatFieldCondition::visit(const StringField& /*field*/) const
+boost::logic::tribool FloatFieldCondition::visit(const StringField& /*field*/) const
 {
-  return false;
+  return boost::logic::indeterminate;
 }
 
-StringFieldCondition::StringFieldCondition(const std::string& value)
-  : value(value)
+StringFieldCondition::StringFieldCondition(const std::string& value, ConditionType conditionType)
+  : FieldCondition(conditionType),
+    value(value)
 {}
 
-bool StringFieldCondition::visit(const IntField& /*field*/) const
+boost::logic::tribool StringFieldCondition::visit(const IntField& /*field*/) const
 {
-  return false;
+  return boost::logic::indeterminate;
 }
 
-bool StringFieldCondition::visit(const FloatField& /*field*/) const
+boost::logic::tribool StringFieldCondition::visit(const FloatField& /*field*/) const
 {
- return false;
+  return boost::logic::indeterminate;
 }
 
-bool StringFieldCondition::visit(const StringField& field) const
+boost::logic::tribool StringFieldCondition::visit(const StringField& field) const
 {
   std::string fieldValue = field.getValue();
 

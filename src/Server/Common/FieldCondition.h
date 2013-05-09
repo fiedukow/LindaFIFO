@@ -3,6 +3,8 @@
 
 #include <string>
 
+#include <boost/logic/tribool.hpp>
+
 namespace Server
 {
 
@@ -16,14 +18,16 @@ class StringField;
 class FieldCondition
 {
 public:
+  enum ConditionType { Less, Equal, Greater, Any };
+
   virtual ~FieldCondition() = default;
 
-  virtual bool visit(const IntField&) const = 0;
-  virtual bool visit(const FloatField&) const = 0;
-  virtual bool visit(const StringField&) const = 0;
+  virtual boost::tribool visit(const IntField&) const = 0;
+  virtual boost::tribool visit(const FloatField&) const = 0;
+  virtual boost::tribool visit(const StringField&) const = 0;
 
 protected:
-  enum ConditionType { Less, Equal, Greater, Any };
+  FieldCondition(ConditionType conditionType);
 
   ConditionType conditionType;
 };
@@ -31,11 +35,11 @@ protected:
 class IntFieldCondition : public FieldCondition
 {
 public:
-  IntFieldCondition(const int value);
+  IntFieldCondition(const int value, ConditionType conditionType);
 
-  virtual bool visit(const IntField&) const;
-  virtual bool visit(const FloatField&) const;
-  virtual bool visit(const StringField&) const;
+  virtual boost::tribool visit(const IntField&) const;
+  virtual boost::tribool visit(const FloatField&) const;
+  virtual boost::tribool visit(const StringField&) const;
 
 private:
   const int value;
@@ -44,11 +48,11 @@ private:
 class FloatFieldCondition : public FieldCondition
 {
 public:
-  FloatFieldCondition(const float value);
+  FloatFieldCondition(const float value, ConditionType conditionType);
 
-  virtual bool visit(const IntField&) const;
-  virtual bool visit(const FloatField&) const;
-  virtual bool visit(const StringField&) const;
+  virtual boost::tribool visit(const IntField&) const;
+  virtual boost::tribool visit(const FloatField&) const;
+  virtual boost::tribool visit(const StringField&) const;
 
 private:
   const float value;
@@ -57,11 +61,11 @@ private:
 class StringFieldCondition : public FieldCondition
 {
 public:
-  StringFieldCondition(const std::string& value);
+  StringFieldCondition(const std::string& value, ConditionType conditionType);
 
-  virtual bool visit(const IntField&) const;
-  virtual bool visit(const FloatField&) const;
-  virtual bool visit(const StringField&) const;
+  virtual boost::tribool visit(const IntField&) const;
+  virtual boost::tribool visit(const FloatField&) const;
+  virtual boost::tribool visit(const StringField&) const;
 
 private:
   const std::string value;

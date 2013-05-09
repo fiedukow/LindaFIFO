@@ -12,4 +12,5 @@ server = env.SConscript('src/SConscript.Server', variant_dir='build', duplicate=
 serverAPI = env.SConscript('src/SConscript.ServerAPI', variant_dir='build', duplicate=0, exports = ['env'])
 env.Depends(client,clientAPI)
 env.Depends(server,serverAPI)
-env.SConscript('test/SConscript.test', variant_dir='build_test', duplicate=0, exports = ['env'])
+tests = env.SConscript('test/SConscript.test', variant_dir='build_test', duplicate=0, exports = ['env'])
+env.Depends(tests,serverAPI)

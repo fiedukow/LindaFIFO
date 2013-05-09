@@ -3,6 +3,8 @@
 
 #include <string>
 
+#include <boost/logic/tribool.hpp>
+
 namespace Server
 {
 
@@ -16,7 +18,7 @@ class Field
 public:
   virtual ~Field() = default;
 
-  virtual bool accept(const FieldCondition&) const = 0;
+  virtual boost::tribool accept(const FieldCondition&) const = 0;
 };
 
 class IntField : public Field
@@ -24,7 +26,7 @@ class IntField : public Field
 public:
   IntField(const int value);
 
-  virtual bool accept(const FieldCondition&) const;
+  virtual boost::tribool accept(const FieldCondition&) const;
 
   int getValue() const;
 
@@ -37,7 +39,7 @@ class FloatField : public Field
 public:
   FloatField(const float value);
 
-  virtual bool accept(const FieldCondition&) const;
+  virtual boost::tribool accept(const FieldCondition&) const;
 
   float getValue() const;
 
@@ -50,7 +52,7 @@ class StringField : public Field
 public:
   StringField(const std::string& value);
 
-  virtual bool accept(const FieldCondition&) const;
+  virtual boost::tribool accept(const FieldCondition&) const;
 
   std::string getValue() const;
 
