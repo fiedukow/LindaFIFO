@@ -28,6 +28,7 @@ struct SelectDescription
 struct InsertDescription
 {
   InsertDescription(const Tuple&);
+  ~InsertDescription();
 
   Tuple* tuple;
 };

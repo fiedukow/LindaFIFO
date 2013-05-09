@@ -21,14 +21,14 @@ SelectDescription::~SelectDescription()
   }
 }
 
-//InsertDescription::InsertDescription(const Tuple& tuple)
-//  : tuple(new Tuple(tuple))
-//{}
-//
-//InsertDescription::~InsertDescription()
-//{
-//  delete tuple;
-//}
+InsertDescription::InsertDescription(const Tuple& tuple)
+  : tuple(new Tuple(tuple))
+{}
+
+InsertDescription::~InsertDescription()
+{
+  delete tuple;
+}
 
 } // namespace Common
 
