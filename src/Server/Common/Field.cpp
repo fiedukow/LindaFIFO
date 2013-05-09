@@ -14,7 +14,7 @@ IntField::IntField(const int value)
   : value(value)
 {}
 
-bool IntField::accept(FieldCondition& fc)
+bool IntField::accept(const FieldCondition& fc) const
 {
   return fc.visit(*this);
 }
@@ -30,7 +30,7 @@ FloatField::FloatField(const float value)
   : value(value)
 {}
 
-bool FloatField::accept(FieldCondition& fc)
+bool FloatField::accept(const FieldCondition& fc) const
 {
   return fc.visit(*this);
 }
@@ -46,7 +46,7 @@ StringField::StringField(const std::string& value)
   : value(value)
 {}
 
-bool StringField::accept(FieldCondition& fc)
+bool StringField::accept(const FieldCondition& fc) const
 {
   return fc.visit(*this);
 }
