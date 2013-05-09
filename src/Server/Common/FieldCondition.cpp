@@ -8,6 +8,10 @@ namespace Server
 namespace Common
 {
 
+IntFieldCondition::IntFieldCondition(const int value)
+  : value(value)
+{}
+
 bool IntFieldCondition::visit(IntField& field) const
 {
   int fieldValue = field.getValue();
@@ -40,6 +44,10 @@ bool FloatFieldCondition::visit(IntField& /*field*/) const
   return false;
 }
 
+FloatFieldCondition::FloatFieldCondition(const float value)
+  : value(value)
+{}
+
 bool FloatFieldCondition::visit(FloatField& field) const
 {
   float fieldValue = field.getValue();
@@ -61,6 +69,10 @@ bool FloatFieldCondition::visit(StringField& /*field*/) const
 {
   return false;
 }
+
+StringFieldCondition::StringFieldCondition(const std::string& value)
+  : value(value)
+{}
 
 bool StringFieldCondition::visit(IntField& /*field*/) const
 {

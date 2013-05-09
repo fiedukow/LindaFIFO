@@ -1,3 +1,6 @@
+#ifndef SERVER_COMMON_FIELD_H
+#define SERVER_COMMON_FIELD_H
+
 #include <string>
 
 namespace Server
@@ -13,7 +16,7 @@ class Field
 public:
   virtual ~Field() = default;
 
-  virtual void accept(FieldCondition&) = 0;
+  virtual bool accept(FieldCondition&) = 0;
 };
 
 class IntField : public Field
@@ -21,7 +24,7 @@ class IntField : public Field
 public:
   IntField(const int value);
 
-  virtual void accept(FieldCondition&);
+  virtual bool accept(FieldCondition&);
 
   int getValue() const;
 
@@ -32,7 +35,9 @@ private:
 class FloatField : public Field
 {
 public:
-  virtual void accept(FieldCondition&);
+  FloatField(const float value);
+
+  virtual bool accept(FieldCondition&);
 
   float getValue() const;
 
@@ -43,7 +48,9 @@ private:
 class StringField : public Field
 {
 public:
-  virtual void accept(FieldCondition&);
+  StringField(const std::string& value);
+
+  virtual bool accept(FieldCondition&);
 
   std::string getValue() const;
 
@@ -54,3 +61,6 @@ private:
 } // namespace Common
 
 } // namespace Server
+
+#endif // SERVER_COMMON_FIELD_H
+

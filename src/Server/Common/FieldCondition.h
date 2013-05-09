@@ -1,3 +1,6 @@
+#ifndef SERVER_COMMON_FIELDCONDITION_H
+#define SERVER_COMMON_FIELDCONDITION_H
+
 #include <string>
 
 namespace Server
@@ -41,6 +44,8 @@ private:
 class FloatFieldCondition : public FieldCondition
 {
 public:
+  FloatFieldCondition(const float value);
+
   virtual bool visit(IntField&) const;
   virtual bool visit(FloatField&) const;
   virtual bool visit(StringField&) const;
@@ -52,6 +57,8 @@ private:
 class StringFieldCondition : public FieldCondition
 {
 public:
+  StringFieldCondition(const std::string& value);
+
   virtual bool visit(IntField&) const;
   virtual bool visit(FloatField&) const;
   virtual bool visit(StringField&) const;
@@ -63,3 +70,6 @@ private:
 } // namespace Common
 
 } // namespace Server
+
+#endif // SERVER_COMMON_FIELDCONDITION_H
+
