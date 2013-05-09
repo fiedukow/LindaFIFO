@@ -13,18 +13,41 @@ BOOST_AUTO_TEST_CASE( Database_insertion_test )
   using namespace Server;
   Database database;
 
-  { // insert 5,"foo" to DB
-    Common::Tuple tuple = {
-        new Common::IntField(5),
-        new Common::StringField("foo")
-      };
+  Common::Tuple tuple1 = {
+      new Common::IntField(5),
+      new Common::StringField("foo")
+    };
 
-    Common::InsertDescription description(tuple);
+  { // insert 5,"foo" to DB
+    Common::InsertDescription description(tuple1);
 
     database.output(description);
   }
 
   BOOST_REQUIRE_EQUAL(database.getTuplesCount(),1);
+
+  Common::Tuple tuple2 = {
+      new Common::IntField(1),
+      new Common::StringField("bar")
+    };
+
+  { // insert 1,"bar" to DB
+    Common::InsertDescription description(tuple2);
+
+    database.output(description);
+  }
+
+  BOOST_REQUIRE_EQUAL(database.getTuplesCount(),2);
+
+  { 
+    Common::SelectDescription::FieldConditions conditions = {
+        new Common::IntFieldCondition(5,Common::FieldCondition::Equal)
+      };
+
+    Common::SelectDescription description(conditions);
+    Common::Tuple tuple = database.read(description);
+    BOOST_CHECK(tuple == tuple1);
+  }
 }
 
 BOOST_AUTO_TEST_SUITE_END()
