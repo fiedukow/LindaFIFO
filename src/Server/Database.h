@@ -1,6 +1,8 @@
 #ifndef SERVER_DATABASE_H
 #define SERVER_DATABASE_H
 
+#include <vector>
+
 #include "Common/QueryStructures.h" // for Tuple typedef
 
 namespace Server
@@ -34,6 +36,10 @@ public:
 
 private:
   typedef std::vector<Common::Tuple> TuplesCollection;
+
+  TuplesCollection::iterator
+    getPositionOfTuple(const Common::SelectDescription&) const;
+  void removeTupleByPosition(TuplesCollection::iterator position);
 
   TuplesCollection tuplesCollection;
 };
