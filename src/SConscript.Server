@@ -11,6 +11,9 @@ envCopy.Append(
 
 sourceTargets = [ 'Common/Field.cpp',
                   'Common/FieldCondition.cpp',
+                  'Common/QueryStructures.cpp',
+                  'Database.cpp',
+                  'Exceptions.cpp',
                   'main.cpp' ]
 
 targets = []
