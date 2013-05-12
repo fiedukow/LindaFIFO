@@ -1,0 +1,20 @@
+# vim: ft=python
+
+Import('env')
+
+dir = 'Common'
+
+envCopy = env.Clone()
+envCopy.Append(
+                CPPPATH = '.'
+              )
+
+sourceTargets = [ 'NamedPipe.cpp' ]
+
+targets = []
+for source in sourceTargets:
+  targets.append(dir + '/' + source)
+
+library = envCopy.Library('NamedPipe',targets)
+
+Return( 'library' )

@@ -1,6 +1,9 @@
+#include "Server.h"
+
 int main(void)
 {
-  // TODO implement this
+  Server server;
+  server();
   return 0;
 }
 

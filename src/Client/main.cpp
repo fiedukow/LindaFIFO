@@ -1,6 +1,9 @@
+#include "Client.h"
+
 int main(void)
 {
-  // TODO implement this
+  Client client;
+  client();
   return 0;
 }
 

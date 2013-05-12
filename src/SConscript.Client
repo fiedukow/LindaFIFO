@@ -9,7 +9,8 @@ envCopy.Append(
                 CPPPATH = '.'
               )
 
-sourceTargets = [ 'main.cpp'
+sourceTargets = [ 'main.cpp',
+                  'Client.cpp'
                   ]
 
 targets = []
@@ -18,7 +19,7 @@ for source in sourceTargets:
 
 program = envCopy.Program(target = '../bin/Client',
                           source = targets,
-                          LIBS = [ 'ClientAPI' ],
+                          LIBS = [ 'ClientAPI', 'NamedPipe' ],
                           LIBPATH = [ '.' ])
 
 Return( 'program' )

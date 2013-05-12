@@ -9,7 +9,8 @@ envCopy.Append(
                 CPPPATH = '.'
               )
 
-sourceTargets = [ 'main.cpp' ]
+sourceTargets = [ 'main.cpp',
+                  'Server.cpp' ]
 
 targets = []
 for source in sourceTargets:
@@ -17,7 +18,7 @@ for source in sourceTargets:
 
 program = envCopy.Program(target = '../bin/Server',
                           source = targets,
-                          LIBS = [ 'ServerAPI' ],
+                          LIBS = [ 'ServerAPI', 'NamedPipe' ],
                           LIBPATH = [ '.' ])
 
 Return( 'program' )
