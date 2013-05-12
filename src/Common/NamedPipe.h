@@ -14,8 +14,8 @@ enum PipeMode { READ_BLOCKING        = O_RDONLY,
 class NamedPipe
 {
 public:
-  NamedPipe(const std::string& pipeName); //throws when unable to create
-  virtual ~NamedPipe() = default; //tries to unlink...
+  NamedPipe(const std::string& pipeName);
+  virtual ~NamedPipe() = default;
 
   bool open(PipeMode);
   bool tryOpen(PipeMode);
