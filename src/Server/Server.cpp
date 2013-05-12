@@ -5,37 +5,27 @@
 #include <signal.h>
 #include <sys/file.h>
 
-static void sigPipe (int sig, siginfo_t *siginfo, void *context)
+static Server* I_DONT_WANT_TO_LIVE_ON_THIS_PLANET_ANYMORE = NULL;
+
+static void signalHandler(int sig)
 {
-  printf ("Sending PID: %ld, UID: %ld\n",
-      (long)siginfo->si_pid, (long)siginfo->si_uid);
+  if(I_DONT_WANT_TO_LIVE_ON_THIS_PLANET_ANYMORE)
+    I_DONT_WANT_TO_LIVE_ON_THIS_PLANET_ANYMORE->handlePosixSignal(sig);
 }
 
 Server::Server()
   : registerPipe_(new OwnedNamedPipe("/tmp/LINDA_REGISTER_PIPE")),
     id_(0),
-    lastRegisteredPid_(0)
+    lastRegisteredPid_(0),
+    stopped_(false)
 {
-  struct sigaction act;
-  memset (&act, '\0', sizeof(act));
-
-  /* Use the sa_sigaction field because the handles has two additional parameters */
-  act.sa_sigaction = &sigPipe;
- 
-  /* The SA_SIGINFO flag tells sigaction() to use the sa_sigaction field, not sa_handler. */
-  act.sa_flags = SA_SIGINFO;
- 
-  if (sigaction(SIGPIPE, &act, NULL) < 0) {
-    perror ("sigaction");
-    throw 1;
-  }
- 
+  signal(SIGINT, &signalHandler);
+  I_DONT_WANT_TO_LIVE_ON_THIS_PLANET_ANYMORE = this;
 }
-
 
 void Server::operator()()
 {
-  while(true)
+  while(!stopped_)
   {
     std::cout << "Nowy cykl..." << std::endl;
     handleNewClientRegistering();
@@ -43,6 +33,27 @@ void Server::operator()()
     handleAnswers();
     handleTimeouts();
   }
+
+  std::cout << "Grzeczny koniec..." << std::endl;
+}
+
+void Server::handlePosixSignal(int signal)
+{
+  switch(signal)
+  {
+    case SIGINT:
+      stop();
+      break;
+    case SIGPIPE:
+      std::cout << "SIGPIPE" << std::endl;
+    default:
+      assert(false);    
+  }
+}
+
+void Server::stop()
+{
+  stopped_ = true;
 }
 
 void Server::handleNewClientRegistering()

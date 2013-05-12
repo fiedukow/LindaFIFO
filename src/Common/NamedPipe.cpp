@@ -57,7 +57,9 @@ void NamedPipe::readUnlock()
 pid_t NamedPipe::getReadLockingPid() const
 {
   int chkDescriptor = ::open(name_.c_str(), READ_NONBLOCKING);
-  assert(chkDescriptor > 0);
+  if(chkDescriptor <= 0)
+    return -1;
+
   struct flock fl = buildFileLock(F_WRLCK);
   fl.l_pid = -1;
   
