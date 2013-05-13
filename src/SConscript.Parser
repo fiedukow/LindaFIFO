@@ -1,0 +1,20 @@
+# vim: ft=python
+
+Import('env')
+
+dir = 'Parser'
+
+envCopy = env.Clone()
+envCopy.Append(
+                CPPPATH = '.'
+              )
+
+sourceTargets = [ 'Parser.cpp' ]
+
+targets = []
+for source in sourceTargets:
+  targets.append(dir + '/' + source)
+
+library = envCopy.Library('Parser',targets)
+
+Return( 'library' )
