@@ -8,6 +8,7 @@
 #include <list>
 // yes, I'm mixing C with C++
 #include <cstring>
+#include <cctype>
 
 #define MIN(a, b) ((a < b) ? a : b)
 
@@ -26,6 +27,9 @@ struct Operation {
 
     ~Operation()
     {
+        for (auto i = elements->begin(); i != elements->end(); i++) {
+            delete *i;
+        }
         delete elements;
     }
 };
@@ -82,6 +86,13 @@ struct Parser {
         }
     }
 
+    bool peek(char c) { return source[cur] == c; }
+
+    void skipws()
+    {
+        while (isblank(source[cur])) cur++;
+    }
+
     Operation* TOP()
     {
         puts("parsing top");
@@ -90,8 +101,8 @@ struct Parser {
             ret->type = operation();
             printf("operation is %d\n", ret->type);
             consume("(");
-            consume(")");
             ret->elements = elements();
+            consume(")");
         } catch (Parser::Exception *p) {
             delete ret;
             throw p;
@@ -120,14 +131,44 @@ struct Parser {
     std::list<Element*>* elements()
     {
         std::list<Element*> *ret = new std::list<Element*>();
+        Element *e;
+        try {
+            e = element();
+            if (e) ret->push_back(e);
+            skipws();
+            while (peek(',')) {
+                consume(",");
+                skipws();
+                ret->push_back(element());
+            }
+        } catch (Parser::Exception *p) {
+            delete ret;
+            throw p;
+        }
         return ret; 
+    }
+
+    Element * element()
+    {
+        std::string val;
+        int oldcur = cur;
+        while (isdigit(source[cur])) {
+            cur++;
+        }
+        if (oldcur == cur) return nullptr;
+        val.append(source + oldcur, cur - oldcur);
+        Element *ret = new Element;
+        ret->type = Element::Type::INT;
+        ret->int_value = atoi(val.c_str());
+        printf("New value: %d\n", ret->int_value);
+        return ret;
     }
 };
 
 int main(void)
 {
     Operation *op = nullptr;
-    Parser p("input(");
+    Parser p("input(55, 5, 0)");
     try {
         op = p.TOP();
     } catch (Parser::Exception* ex) {
