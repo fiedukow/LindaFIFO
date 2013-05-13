@@ -22,7 +22,12 @@ struct Element {
 struct Operation {
     enum Type { INPUT, OUTPUT, READ };
     Type type;
-    std::list<Element*> elements;
+    std::list<Element*>* elements;
+
+    ~Operation()
+    {
+        delete elements;
+    }
 };
 
 /*
@@ -81,10 +86,16 @@ struct Parser {
     {
         puts("parsing top");
         Operation *ret = new Operation;
-        ret->type = operation();
-        printf("operation is %d\n", ret->type);
-        consume("(");
-        consume(")");
+        try {
+            ret->type = operation();
+            printf("operation is %d\n", ret->type);
+            consume("(");
+            consume(")");
+            ret->elements = elements();
+        } catch (Parser::Exception *p) {
+            delete ret;
+            throw p;
+        }
         return ret;
     }
 
@@ -116,7 +127,7 @@ struct Parser {
 int main(void)
 {
     Operation *op = nullptr;
-    Parser p("input()");
+    Parser p("input(");
     try {
         op = p.TOP();
     } catch (Parser::Exception* ex) {
