@@ -72,6 +72,9 @@ Parser::elements()
             ret->push_back(element());
         }
     } catch (Parser::Exception *p) {
+        for (auto i = ret->begin(); i != ret->end(); i++) {
+            delete *i;
+        }
         delete ret;
         throw p;
     }
