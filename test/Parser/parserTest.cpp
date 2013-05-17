@@ -13,6 +13,7 @@ bool parses_ok(const char *s) {
         ret = true;
     } catch (Parser::Exception *p) {
         std::cerr << "Test failed - " << s << ": " << p->what() << std::endl;
+        delete p;
     }
     delete op;
     return ret;
@@ -26,6 +27,7 @@ bool throws_ok(const char *s) {
         op = p.TOP();
         ret = false;
     } catch (Parser::Exception *p) {
+        delete p;
     }
     delete op;
     return ret;

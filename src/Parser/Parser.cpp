@@ -83,7 +83,7 @@ Parser::elements()
             skipws();
             e = element();
             if (e != nullptr)
-                ret->push_back(element());
+                ret->push_back(e);
             else die("Expected an element after a comma");
         }
     } catch (Parser::Exception *p) {
@@ -107,7 +107,12 @@ Parser::parse_string()
     Element *ret = new Element;
     ret->type = Element::Type::STR;
     ret->string_value.append(source + oldcur, cur - oldcur);
-    consume("\"");
+    try {
+        consume("\"");
+    } catch (Parser::Exception *p) {
+        delete ret;
+        throw p;
+    }
     return ret;
 }
 
