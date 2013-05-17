@@ -8,6 +8,17 @@
 
 #define MIN(a, b) ((a < b) ? a : b)
 
+void
+Parser::consume(const char *pattern)
+{
+    if (!strncmp(pattern, source + cur, strlen(pattern))) {
+        cur += strlen(pattern);
+    } else {
+        std::string exp = "Expected ";
+        exp.append(pattern);
+        die(exp);
+    }
+}
 
 void
 Parser::die(std::string m)
@@ -86,8 +97,26 @@ Parser::elements()
 }
 
 Element *
+Parser::parse_string()
+{
+    consume("\"");
+    int oldcur = cur;
+    while (!peek('"')) {
+        cur++;
+    }
+    Element *ret = new Element;
+    ret->type = Element::Type::STR;
+    ret->string_value.append(source + oldcur, cur - oldcur);
+    consume("\"");
+    return ret;
+}
+
+Element *
 Parser::element()
 {
+    if (peek('"')) {
+        return parse_string();
+    }
     std::string val;
     int oldcur = cur;
     while (isdigit(source[cur])) {

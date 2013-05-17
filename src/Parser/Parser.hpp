@@ -8,7 +8,7 @@
 #include <cctype>
 
 struct Element {
-    enum Type { INT, NUM, STRING };
+    enum Type { INT, NUM, STR };
     Type type;
     int int_value;
     double num_value;
@@ -54,31 +54,15 @@ struct Parser {
     void die(std::string m);
     void die(const char *m) { die(std::string(m)); }
 
-
     Parser(const char *src) : source(src), cur(0) { }
-
-    void consume(const char *pattern)
-    {
-        if (!strncmp(pattern, source + cur, strlen(pattern))) {
-            cur += strlen(pattern);
-        } else {
-            std::string exp = "Expected ";
-            exp.append(pattern);
-            die(exp);
-        }
-    }
-
+    void consume(const char *);
     bool peek(char c) { return source[cur] == c; }
-
     void skipws() { while (isblank(source[cur])) cur++; }
-
     Operation* TOP();
-
     Operation::Type operation();
-
     std::list<Element*>* elements();
-
     Element * element();
+    Element * parse_string();
 };
 
 #endif
