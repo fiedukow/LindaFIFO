@@ -18,14 +18,16 @@ struct Element {
 struct Operation {
     enum Type { INPUT, OUTPUT, READ };
     Type type;
-    std::list<Element*>* elements;
+    std::list<Element*>* elements = nullptr;
 
     ~Operation()
     {
-        for (auto i = elements->begin(); i != elements->end(); i++) {
-            delete *i;
+        if (elements != nullptr) {
+            for (auto i = elements->begin(); i != elements->end(); i++) {
+                delete *i;
+            }
+            delete elements;
         }
-        delete elements;
     }
 };
 
