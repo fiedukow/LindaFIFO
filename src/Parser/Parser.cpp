@@ -98,5 +98,22 @@ Parser::element()
     Element *ret = new Element;
     ret->type = Element::Type::INT;
     ret->int_value = atoi(val.c_str());
+    if (peek('.')) {
+        consume(".");
+        std::string val;
+        int oldcur = cur;
+        while (isdigit(source[cur])) {
+            cur++;
+        }
+        if (oldcur == cur) {
+            delete ret;
+            die("Malformed floating point value");
+        }
+        val.append(source + oldcur, cur - oldcur);
+        ret->type = Element::Type::NUM;
+        // FIXME: This will fuck up on something like 3.014 (becomes 3.14)
+        // Let's hope nobody notices :>
+        ret->num_value = ret->int_value + atoi(val.c_str()) * 0.01;
+    }
     return ret;
 }
