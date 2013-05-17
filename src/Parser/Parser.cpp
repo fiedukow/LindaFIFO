@@ -65,11 +65,15 @@ Parser::elements()
     try {
         e = element();
         if (e) ret->push_back(e);
+        else die("Zero elements not allowed");
         skipws();
         while (peek(',')) {
             consume(",");
             skipws();
-            ret->push_back(element());
+            e = element();
+            if (e != nullptr)
+                ret->push_back(element());
+            else die("Expected an element after a comma");
         }
     } catch (Parser::Exception *p) {
         for (auto i = ret->begin(); i != ret->end(); i++) {
