@@ -14,7 +14,7 @@ struct Element {
     Constraint constraint;
     int int_value;
     double num_value;
-    std::string string_value;
+    std::string str_value;
 };
 
 struct Operation {

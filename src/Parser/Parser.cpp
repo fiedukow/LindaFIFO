@@ -188,7 +188,7 @@ Parser::element()
                     ret->num_value = num_pair.second;
                     break;
                 case Element::Type::STR:
-                    ret->string_value = parse_string();
+                    ret->str_value = parse_string();
                     break;
                 }
             }
@@ -203,7 +203,7 @@ Parser::element()
         std::string str = parse_string();
         Element *ret = new Element;
         ret->type = Element::Type::STR;
-        ret->string_value = str;
+        ret->str_value = str;
         return ret;
     }
     auto num_pair = parse_numeric();
