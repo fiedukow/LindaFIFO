@@ -96,23 +96,17 @@ Parser::elements()
     return ret; 
 }
 
-Element *
+std::string
 Parser::parse_string()
 {
+    std::string ret;
     consume("\"");
     int oldcur = cur;
     while (!(source[cur - 1] != '\\' && peek('"'))) {
         cur++;
     }
-    Element *ret = new Element;
-    ret->type = Element::Type::STR;
-    ret->string_value.append(source + oldcur, cur - oldcur);
-    try {
-        consume("\"");
-    } catch (Parser::Exception *p) {
-        delete ret;
-        throw p;
-    }
+    ret.append(source + oldcur, cur - oldcur);
+    consume("\"");
     return ret;
 }
 
@@ -133,11 +127,25 @@ Element *
 Parser::element()
 {
     // constrained element, for input()
+    Element::Type type;
+    bool constrained = false;
     if (peek("integer")) {
         consume("integer");
         consume(":");
-        bool any = false;
-        int val;
+        constrained = true;
+        type = Element::Type::INT;
+    } else if (peek("float")) {
+        consume("float");
+        consume(":");
+        constrained = true;
+        type = Element::Type::NUM;
+    } else if (peek("string")) {
+        consume("string");
+        consume(":");
+        constrained = true;
+        type = Element::Type::STR;
+    }
+    if (constrained) {
         Element::Constraint constraint;
         if (peek('*')) {
             consume("*");
@@ -151,17 +159,36 @@ Parser::element()
         } else {
             constraint = Element::Constraint::EQ;
         }
-        if (constraint != Element::Constraint::ANY)
-            val = parse_int();
         Element *ret = new Element;
-        ret->type = Element::Type::INT;
+        ret->type = type;
         ret->constraint = constraint;
-        ret->int_value = val;
+        try {
+            if (constraint != Element::Constraint::ANY) {
+                switch (type) {
+                case Element::Type::INT:
+                    ret->int_value = parse_int();
+                    break;
+                case Element::Type::NUM:
+                    // TODO
+                    break;
+                case Element::Type::STR:
+                    ret->string_value = parse_string();
+                    break;
+                }
+            }
+        } catch (Parser::Exception *p) {
+            delete ret;
+            throw p;
+        }
         return ret;
     }
     // concrete element, for output()
     if (peek('"')) {
-        return parse_string();
+        std::string str = parse_string();
+        Element *ret = new Element;
+        ret->type = Element::Type::STR;
+        ret->string_value = str;
+        return ret;
     }
     int val = parse_int();
     Element *ret = new Element;

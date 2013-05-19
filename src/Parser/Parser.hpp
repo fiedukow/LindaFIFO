@@ -65,7 +65,7 @@ struct Parser {
     Operation::Type operation();
     std::list<Element*>* elements();
     Element * element();
-    Element * parse_string();
+    std::string parse_string();
     int parse_int();
 };
 
