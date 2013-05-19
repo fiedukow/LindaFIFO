@@ -136,11 +136,22 @@ Parser::element()
     if (peek("integer")) {
         consume("integer");
         consume(":");
-        int val = parse_int();
+        bool any = false;
+        int val;
+        if (peek('*')) {
+            consume("*");
+            any = true;
+        } else {
+            val = parse_int();
+        }
         Element *ret = new Element;
         ret->type = Element::Type::INT;
-        ret->constraint = Element::Constraint::EQ;
-        ret->int_value = val;
+        if (any) {
+            ret->constraint = Element::Constraint::ANY;
+        } else {
+            ret->constraint = Element::Constraint::EQ;
+            ret->int_value = val;
+        }
         return ret;
     }
     // concrete element, for output()
