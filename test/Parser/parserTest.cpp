@@ -19,6 +19,13 @@ bool parses_ok(const char *s) {
     return ret;
 }
 
+Operation *
+parse(const char *s)
+{
+    Parser p(s);
+    return p.TOP();
+}
+
 bool throws_ok(const char *s) {
     Parser p(s);
     Operation *op = nullptr;
@@ -57,6 +64,90 @@ BOOST_AUTO_TEST_CASE( Parser_ok_test )
     BOOST_CHECK(parses_ok("input(float:3.5)"));
     BOOST_CHECK(parses_ok("input(float:<3.5)"));
     BOOST_CHECK(parses_ok("input(float:*)"));
+}
+
+BOOST_AUTO_TEST_CASE( Parser_AST )
+{
+    Operation *op;
+    op = parse("input(5)");
+    BOOST_CHECK(op->arity() == 1);
+    delete op;
+
+    op = parse("input(55)");
+    BOOST_CHECK(op->arity() == 1);
+    delete op;
+
+    op = parse("input(55,5)");
+    BOOST_CHECK(op->arity() == 2);
+    delete op;
+
+    op = parse("input(55, 5)");
+    BOOST_CHECK(op->arity() == 2);
+    delete op;
+
+    op = parse("input(55 , 5)");
+    BOOST_CHECK(op->arity() == 2);
+    delete op;
+
+    op = parse("input(3.14)");
+    BOOST_CHECK(op->arity() == 1);
+    delete op;
+
+    op = parse("input(\"\")");
+    BOOST_CHECK(op->arity() == 1);
+    delete op;
+
+    op = parse("input(\"chuj\")");
+    BOOST_CHECK(op->arity() == 1);
+    delete op;
+
+    op = parse("input(\"foo\", \"bar\", \"baz\")");
+    BOOST_CHECK(op->arity() == 3);
+    delete op;
+
+    op = parse("input(\"fo\\\"o\")");
+    BOOST_CHECK(op->arity() == 1);
+    delete op;
+
+    op = parse("input(integer:5)");
+    BOOST_CHECK(op->arity() == 1);
+    delete op;
+
+    op = parse("input(integer:*)");
+    BOOST_CHECK(op->arity() == 1);
+    delete op;
+
+    op = parse("input(integer:>3)");
+    BOOST_CHECK(op->arity() == 1);
+    delete op;
+
+    op = parse("input(integer:<3)");
+    BOOST_CHECK(op->arity() == 1);
+    delete op;
+
+    op = parse("input(string:*)");
+    BOOST_CHECK(op->arity() == 1);
+    delete op;
+
+    op = parse("input(string:\"foo\")");
+    BOOST_CHECK(op->arity() == 1);
+    delete op;
+
+    op = parse("input(float:>3.5)");
+    BOOST_CHECK(op->arity() == 1);
+    delete op;
+
+    op = parse("input(float:3.5)");
+    BOOST_CHECK(op->arity() == 1);
+    delete op;
+
+    op = parse("input(float:<3.5)");
+    BOOST_CHECK(op->arity() == 1);
+    delete op;
+
+    op = parse("input(float:*)");
+    BOOST_CHECK(op->arity() == 1);
+    delete op;
 }
 
 BOOST_AUTO_TEST_CASE( Parser_fail_test )

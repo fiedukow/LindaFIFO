@@ -22,6 +22,9 @@ struct Operation {
     Type type;
     std::vector<Element*>* elements = nullptr;
 
+    Element& element(int n) { return *((*elements)[n]); }
+    int arity() { return elements == nullptr ? 0 : elements->size(); }
+
     ~Operation()
     {
         if (elements != nullptr) {
