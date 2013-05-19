@@ -46,6 +46,7 @@ BOOST_AUTO_TEST_CASE( Parser_ok_test )
     BOOST_CHECK(parses_ok("input(\"\")"));
     BOOST_CHECK(parses_ok("input(\"chuj\")"));
     BOOST_CHECK(parses_ok("input(\"foo\", \"bar\", \"baz\")"));
+    BOOST_CHECK(parses_ok("input(\"fo\\\"o\")"));
 }
 
 BOOST_AUTO_TEST_CASE( Parser_fail_test )

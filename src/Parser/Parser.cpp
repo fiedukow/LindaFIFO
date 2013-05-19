@@ -101,7 +101,7 @@ Parser::parse_string()
 {
     consume("\"");
     int oldcur = cur;
-    while (!peek('"')) {
+    while (!(source[cur - 1] != '\\' && peek('"'))) {
         cur++;
     }
     Element *ret = new Element;
