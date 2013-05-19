@@ -4,8 +4,6 @@
 
 // just kidding
 
-#include <iostream>
-
 #define MIN(a, b) ((a < b) ? a : b)
 
 void
