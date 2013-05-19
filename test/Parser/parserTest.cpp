@@ -49,6 +49,8 @@ BOOST_AUTO_TEST_CASE( Parser_ok_test )
     BOOST_CHECK(parses_ok("input(\"fo\\\"o\")"));
     BOOST_CHECK(parses_ok("input(integer:5)"));
     BOOST_CHECK(parses_ok("input(integer:*)"));
+    BOOST_CHECK(parses_ok("input(integer:>3)"));
+    BOOST_CHECK(parses_ok("input(integer:<3)"));
 }
 
 BOOST_AUTO_TEST_CASE( Parser_fail_test )
@@ -62,6 +64,10 @@ BOOST_AUTO_TEST_CASE( Parser_fail_test )
     BOOST_CHECK(throws_ok("input( , 5)"));
     BOOST_CHECK(throws_ok("input(3.)"));
     BOOST_CHECK(throws_ok("input(\")"));
+    BOOST_CHECK(throws_ok("input(integer:)"));
+    BOOST_CHECK(throws_ok("input(integer5)"));
+    BOOST_CHECK(throws_ok("input(integer:>)"));
+    BOOST_CHECK(throws_ok("input(integer:<)"));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

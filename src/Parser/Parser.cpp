@@ -138,20 +138,25 @@ Parser::element()
         consume(":");
         bool any = false;
         int val;
+        Element::Constraint constraint;
         if (peek('*')) {
             consume("*");
-            any = true;
+            constraint = Element::Constraint::ANY;
+        } else if (peek('<')) {
+            consume("<");
+            constraint = Element::Constraint::LT;
+        } else if (peek('>')) {
+            consume(">");
+            constraint = Element::Constraint::GT;
         } else {
-            val = parse_int();
+            constraint = Element::Constraint::EQ;
         }
+        if (constraint != Element::Constraint::ANY)
+            val = parse_int();
         Element *ret = new Element;
         ret->type = Element::Type::INT;
-        if (any) {
-            ret->constraint = Element::Constraint::ANY;
-        } else {
-            ret->constraint = Element::Constraint::EQ;
-            ret->int_value = val;
-        }
+        ret->constraint = constraint;
+        ret->int_value = val;
         return ret;
     }
     // concrete element, for output()
