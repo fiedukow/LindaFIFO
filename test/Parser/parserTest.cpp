@@ -134,7 +134,7 @@ BOOST_AUTO_TEST_CASE( Parser_AST )
     op = parse("input(\"fo\\\"o\")");
     BOOST_CHECK(op->arity() == 1);
     BOOST_CHECK(op->element(0).type == Element::Type::STR);
-    // BOOST_CHECK(op->element(0).str_value == "fo\"o"); FIXME -- \ not removed
+    BOOST_CHECK(op->element(0).str_value == "fo\"o");
     delete op;
 
     op = parse("input(integer:5)");

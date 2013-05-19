@@ -99,11 +99,13 @@ Parser::parse_string()
 {
     std::string ret;
     consume("\"");
-    int oldcur = cur;
-    while (!(source[cur - 1] != '\\' && peek('"'))) {
+    while (!peek('"')) {
+        if (peek('\\')) {
+            cur++;
+        }
+        ret.append(source + cur, 1);
         cur++;
     }
-    ret.append(source + oldcur, cur - oldcur);
     consume("\"");
     return ret;
 }
