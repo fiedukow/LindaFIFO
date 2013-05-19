@@ -53,6 +53,10 @@ BOOST_AUTO_TEST_CASE( Parser_ok_test )
     BOOST_CHECK(parses_ok("input(integer:<3)"));
     BOOST_CHECK(parses_ok("input(string:*)"));
     BOOST_CHECK(parses_ok("input(string:\"foo\")"));
+    BOOST_CHECK(parses_ok("input(float:>3.5)"));
+    BOOST_CHECK(parses_ok("input(float:3.5)"));
+    BOOST_CHECK(parses_ok("input(float:<3.5)"));
+    BOOST_CHECK(parses_ok("input(float:*)"));
 }
 
 BOOST_AUTO_TEST_CASE( Parser_fail_test )

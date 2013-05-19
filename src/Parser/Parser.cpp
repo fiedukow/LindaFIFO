@@ -123,6 +123,22 @@ Parser::parse_int()
     return atoi(val.c_str());
 }
 
+std::pair<Element::Type, double>
+Parser::parse_numeric()
+{
+    Element::Type type = Element::Type::INT;
+    double num = (double)parse_int();
+    if (peek('.')) {
+        consume(".");
+        int val = parse_int();
+        type = Element::Type::NUM;
+        // FIXME: This will fuck up on something like 3.014 (becomes 3.14)
+        // Let's hope nobody notices :>
+        num = num + val * 0.01;
+    }
+    return std::make_pair(type, num);
+}
+
 Element *
 Parser::element()
 {
@@ -162,6 +178,7 @@ Parser::element()
         Element *ret = new Element;
         ret->type = type;
         ret->constraint = constraint;
+        std::pair<Element::Type, double> num_pair;
         try {
             if (constraint != Element::Constraint::ANY) {
                 switch (type) {
@@ -169,7 +186,8 @@ Parser::element()
                     ret->int_value = parse_int();
                     break;
                 case Element::Type::NUM:
-                    // TODO
+                    num_pair = parse_numeric();
+                    ret->num_value = num_pair.second;
                     break;
                 case Element::Type::STR:
                     ret->string_value = parse_string();
@@ -190,23 +208,13 @@ Parser::element()
         ret->string_value = str;
         return ret;
     }
-    int val = parse_int();
+    auto num_pair = parse_numeric();
     Element *ret = new Element;
-    ret->type = Element::Type::INT;
-    ret->int_value = val;
-    if (peek('.')) {
-        consume(".");
-        try {
-            val = parse_int();
-        } catch (Parser::Exception *p) {
-            delete p;
-            delete ret;
-            die("Malformed floating point value");
-        }
-        ret->type = Element::Type::NUM;
-        // FIXME: This will fuck up on something like 3.014 (becomes 3.14)
-        // Let's hope nobody notices :>
-        ret->num_value = ret->int_value + val * 0.01;
+    ret->type = num_pair.first;
+    if (ret->type == Element::Type::INT) {
+        ret->int_value = (int)num_pair.second;
+    } else {
+        ret->num_value = num_pair.second;
     }
     return ret;
 }

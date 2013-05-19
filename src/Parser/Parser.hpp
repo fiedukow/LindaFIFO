@@ -66,6 +66,7 @@ struct Parser {
     std::list<Element*>* elements();
     Element * element();
     std::string parse_string();
+    std::pair<Element::Type, double> parse_numeric();
     int parse_int();
 };
 
