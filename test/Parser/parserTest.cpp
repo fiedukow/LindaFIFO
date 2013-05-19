@@ -106,7 +106,7 @@ BOOST_AUTO_TEST_CASE( Parser_AST )
 
     op = parse("input(3.014)");
     BOOST_CHECK(op->arity() == 1);
-    //BOOST_CHECK(op->element(0).num_value == 3.014); FIXME
+    BOOST_CHECK(op->element(0).num_value == 3.014);
     delete op;
 
     op = parse("input(\"\")");
@@ -180,7 +180,7 @@ BOOST_AUTO_TEST_CASE( Parser_AST )
     BOOST_CHECK(op->arity() == 1);
     BOOST_CHECK(op->element(0).type == Element::Type::NUM);
     BOOST_CHECK(op->element(0).constraint == Element::Constraint::GT);
-    //BOOST_CHECK(op->element(0).num_value == 3.5); FIXME
+    BOOST_CHECK(op->element(0).num_value == 3.5);
     delete op;
 
     op = parse("input(float:3.5)");

@@ -128,12 +128,15 @@ Parser::parse_numeric()
     double num = (double)parse_int();
     if (peek('.')) {
         consume(".");
-        int val = parse_int();
+        double factor = 1;
+        while (peek('0')) {
+            consume("0");
+            factor /= 10;
+        }
+        double val = (double)parse_int();
         type = Element::Type::NUM;
-        // FIXME: This will fuck up on something like 3.014 (becomes 3.14)
-        // Let's hope nobody notices :>
-        // XXX: BROKEN 0.01 will work for 3.14, but not for 2.5 or such
-        num = num + val * 0.01;
+        while (val > 1) val /= 10;
+        num = num + val * factor;
     }
     return std::make_pair(type, num);
 }
