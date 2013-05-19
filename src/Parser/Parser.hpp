@@ -2,7 +2,7 @@
 #define _PARSER_HPP_
 
 #include <string>
-#include <list>
+#include <vector>
 // yes, I'm mixing C with C++
 #include <cstring>
 #include <cctype>
@@ -20,7 +20,7 @@ struct Element {
 struct Operation {
     enum Type { INPUT, OUTPUT, READ };
     Type type;
-    std::list<Element*>* elements = nullptr;
+    std::vector<Element*>* elements = nullptr;
 
     ~Operation()
     {
@@ -63,7 +63,7 @@ struct Parser {
     void skipws() { while (isblank(source[cur])) cur++; }
     Operation* TOP();
     Operation::Type operation();
-    std::list<Element*>* elements();
+    std::vector<Element*>* elements();
     Element * element();
     std::string parse_string();
     std::pair<Element::Type, double> parse_numeric();

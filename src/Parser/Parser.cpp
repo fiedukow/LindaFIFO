@@ -66,10 +66,10 @@ Operation::Type Parser::operation()
     return Operation::Type::INPUT; // fuck off, clang
 }
 
-std::list<Element*>*
+std::vector<Element*>*
 Parser::elements()
 {
-    std::list<Element*> *ret = new std::list<Element*>();
+    std::vector<Element*> *ret = new std::vector<Element*>();
     Element *e;
     try {
         e = element();
