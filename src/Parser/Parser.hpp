@@ -59,7 +59,7 @@ struct Parser {
     void die(std::string m);
     void die(const char *m) { die(std::string(m)); }
 
-    Parser(const char *src) : source(src), cur(0) { }
+    Operation * parse(const char *s) { source = s; cur = 0; return TOP(); }
     void consume(const char *);
     bool peek(char c) { return source[cur] == c; }
     bool peek(const char *s) { return !strncmp(s, source + cur, strlen(s)); }
