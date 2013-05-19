@@ -132,6 +132,7 @@ Parser::parse_numeric()
         type = Element::Type::NUM;
         // FIXME: This will fuck up on something like 3.014 (becomes 3.14)
         // Let's hope nobody notices :>
+        // XXX: BROKEN 0.01 will work for 3.14, but not for 2.5 or such
         num = num + val * 0.01;
     }
     return std::make_pair(type, num);

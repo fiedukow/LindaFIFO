@@ -71,82 +71,134 @@ BOOST_AUTO_TEST_CASE( Parser_AST )
     Operation *op;
     op = parse("input(5)");
     BOOST_CHECK(op->arity() == 1);
+    BOOST_CHECK(op->element(0).type == Element::Type::INT);
+    BOOST_CHECK(op->element(0).int_value == 5);
     delete op;
 
     op = parse("input(55)");
     BOOST_CHECK(op->arity() == 1);
+    BOOST_CHECK(op->element(0).int_value == 55);
     delete op;
 
     op = parse("input(55,5)");
     BOOST_CHECK(op->arity() == 2);
+    BOOST_CHECK(op->element(0).int_value == 55);
+    BOOST_CHECK(op->element(1).int_value == 5);
     delete op;
 
     op = parse("input(55, 5)");
     BOOST_CHECK(op->arity() == 2);
+    BOOST_CHECK(op->element(0).int_value == 55);
+    BOOST_CHECK(op->element(1).int_value == 5);
     delete op;
 
     op = parse("input(55 , 5)");
     BOOST_CHECK(op->arity() == 2);
+    BOOST_CHECK(op->element(0).int_value == 55);
+    BOOST_CHECK(op->element(1).int_value == 5);
     delete op;
 
     op = parse("input(3.14)");
     BOOST_CHECK(op->arity() == 1);
+    BOOST_CHECK(op->element(0).type == Element::Type::NUM);
+    BOOST_CHECK(op->element(0).num_value == 3.14);
+    delete op;
+
+    op = parse("input(3.014)");
+    BOOST_CHECK(op->arity() == 1);
+    //BOOST_CHECK(op->element(0).num_value == 3.014); FIXME
     delete op;
 
     op = parse("input(\"\")");
     BOOST_CHECK(op->arity() == 1);
+    BOOST_CHECK(op->element(0).type == Element::Type::STR);
+    BOOST_CHECK(op->element(0).str_value == "");
     delete op;
 
     op = parse("input(\"chuj\")");
     BOOST_CHECK(op->arity() == 1);
+    BOOST_CHECK(op->element(0).type == Element::Type::STR);
+    BOOST_CHECK(op->element(0).str_value == "chuj");
     delete op;
 
     op = parse("input(\"foo\", \"bar\", \"baz\")");
     BOOST_CHECK(op->arity() == 3);
+    BOOST_CHECK(op->element(0).type == Element::Type::STR);
+    BOOST_CHECK(op->element(0).str_value == "foo");
+    BOOST_CHECK(op->element(1).type == Element::Type::STR);
+    BOOST_CHECK(op->element(1).str_value == "bar");
+    BOOST_CHECK(op->element(2).type == Element::Type::STR);
+    BOOST_CHECK(op->element(2).str_value == "baz");
     delete op;
 
     op = parse("input(\"fo\\\"o\")");
     BOOST_CHECK(op->arity() == 1);
+    BOOST_CHECK(op->element(0).type == Element::Type::STR);
+    // BOOST_CHECK(op->element(0).str_value == "fo\"o"); FIXME -- \ not removed
     delete op;
 
     op = parse("input(integer:5)");
     BOOST_CHECK(op->arity() == 1);
+    BOOST_CHECK(op->element(0).type == Element::Type::INT);
+    BOOST_CHECK(op->element(0).constraint == Element::Constraint::EQ);
+    BOOST_CHECK(op->element(0).int_value == 5);
     delete op;
 
     op = parse("input(integer:*)");
     BOOST_CHECK(op->arity() == 1);
+    BOOST_CHECK(op->element(0).type == Element::Type::INT);
+    BOOST_CHECK(op->element(0).constraint == Element::Constraint::ANY);
     delete op;
 
     op = parse("input(integer:>3)");
     BOOST_CHECK(op->arity() == 1);
+    BOOST_CHECK(op->element(0).type == Element::Type::INT);
+    BOOST_CHECK(op->element(0).constraint == Element::Constraint::GT);
+    BOOST_CHECK(op->element(0).int_value == 3);
     delete op;
 
     op = parse("input(integer:<3)");
     BOOST_CHECK(op->arity() == 1);
+    BOOST_CHECK(op->element(0).type == Element::Type::INT);
+    BOOST_CHECK(op->element(0).constraint == Element::Constraint::LT);
+    BOOST_CHECK(op->element(0).int_value == 3);
     delete op;
 
     op = parse("input(string:*)");
     BOOST_CHECK(op->arity() == 1);
+    BOOST_CHECK(op->element(0).type == Element::Type::STR);
+    BOOST_CHECK(op->element(0).constraint == Element::Constraint::ANY);
     delete op;
 
     op = parse("input(string:\"foo\")");
     BOOST_CHECK(op->arity() == 1);
+    BOOST_CHECK(op->element(0).constraint == Element::Constraint::EQ);
+    BOOST_CHECK(op->element(0).str_value == "foo");
     delete op;
 
     op = parse("input(float:>3.5)");
     BOOST_CHECK(op->arity() == 1);
+    BOOST_CHECK(op->element(0).type == Element::Type::NUM);
+    BOOST_CHECK(op->element(0).constraint == Element::Constraint::GT);
+    //BOOST_CHECK(op->element(0).num_value == 3.5); FIXME
     delete op;
 
     op = parse("input(float:3.5)");
     BOOST_CHECK(op->arity() == 1);
+    BOOST_CHECK(op->element(0).type == Element::Type::NUM);
+    BOOST_CHECK(op->element(0).constraint == Element::Constraint::EQ);
     delete op;
 
     op = parse("input(float:<3.5)");
     BOOST_CHECK(op->arity() == 1);
+    BOOST_CHECK(op->element(0).type == Element::Type::NUM);
+    BOOST_CHECK(op->element(0).constraint == Element::Constraint::LT);
     delete op;
 
     op = parse("input(float:*)");
     BOOST_CHECK(op->arity() == 1);
+    BOOST_CHECK(op->element(0).type == Element::Type::NUM);
+    BOOST_CHECK(op->element(0).constraint == Element::Constraint::ANY);
     delete op;
 }
 
