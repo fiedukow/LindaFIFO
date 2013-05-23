@@ -6,219 +6,219 @@
 
 #define MIN(a, b) ((a < b) ? a : b)
 
-void
+  void
 Parser::consume(const char *pattern)
 {
-    if (!strncmp(pattern, source + cur, strlen(pattern))) {
-        cur += strlen(pattern);
-    } else {
-        std::string exp = "Expected ";
-        exp.append(pattern);
-        die(exp);
-    }
+  if (!strncmp(pattern, source + cur, strlen(pattern))) {
+    cur += strlen(pattern);
+  } else {
+    std::string exp = "Expected ";
+    exp.append(pattern);
+    die(exp);
+  }
 }
 
-void
+  void
 Parser::die(std::string m)
 {
-    std::string msg = m;
-    msg.append(" near '");
-    // no more than 10 characters from source
-    msg.append(source + cur, MIN(10, strlen(source + cur)));
-    if (source[cur] == '\0') {
-        msg.append("(end of string)");
-    }
-    msg.append("'");
-    throw new Exception(msg.c_str());
+  std::string msg = m;
+  msg.append(" near '");
+  // no more than 10 characters from source
+  msg.append(source + cur, MIN(10, strlen(source + cur)));
+  if (source[cur] == '\0') {
+    msg.append("(end of string)");
+  }
+  msg.append("'");
+  throw new Exception(msg.c_str());
 }
 
-Operation*
+  Operation*
 Parser::TOP()
 {
-    Operation *ret = new Operation;
-    try {
-        ret->type = operation();
-        consume("(");
-        ret->elements = elements();
-        consume(")");
-    } catch (Parser::Exception *p) {
-        delete ret;
-        throw p;
-    }
-    return ret;
+  Operation *ret = new Operation;
+  try {
+    ret->type = operation();
+    consume("(");
+    ret->elements = elements();
+    consume(")");
+  } catch (Parser::Exception *p) {
+    delete ret;
+    throw p;
+  }
+  return ret;
 }
 
 Operation::Type Parser::operation()
 {
-    if (!strncmp("input", source + cur, strlen("input"))) {
-        cur += strlen("input");
-        return Operation::Type::INPUT;
-    }
-    if (!strncmp("output", source + cur, strlen("output"))) {
-        cur += strlen("output");
-        return Operation::Type::OUTPUT;
-    }
-    if (!strncmp("read", source + cur, strlen("read"))) {
-        cur += strlen("read");
-        return Operation::Type::READ;
-    }
-    die("unrecognized operation");
-    return Operation::Type::INPUT; // fuck off, clang
+  if (!strncmp("input", source + cur, strlen("input"))) {
+    cur += strlen("input");
+    return Operation::Type::INPUT;
+  }
+  if (!strncmp("output", source + cur, strlen("output"))) {
+    cur += strlen("output");
+    return Operation::Type::OUTPUT;
+  }
+  if (!strncmp("read", source + cur, strlen("read"))) {
+    cur += strlen("read");
+    return Operation::Type::READ;
+  }
+  die("unrecognized operation");
+  return Operation::Type::INPUT; // fuck off, clang
 }
 
-std::vector<Element*>*
+  std::vector<Element*>*
 Parser::elements()
 {
-    std::vector<Element*> *ret = new std::vector<Element*>();
-    Element *e;
-    try {
-        e = element();
-        if (e) ret->push_back(e);
-        else die("Zero elements not allowed");
-        skipws();
-        while (peek(',')) {
-            consume(",");
-            skipws();
-            e = element();
-            if (e != nullptr)
-                ret->push_back(e);
-            else die("Expected an element after a comma");
-        }
-    } catch (Parser::Exception *p) {
-        for (auto i = ret->begin(); i != ret->end(); i++) {
-            delete *i;
-        }
-        delete ret;
-        throw p;
+  std::vector<Element*> *ret = new std::vector<Element*>();
+  Element *e;
+  try {
+    e = element();
+    if (e) ret->push_back(e);
+    else die("Zero elements not allowed");
+    skipws();
+    while (peek(',')) {
+      consume(",");
+      skipws();
+      e = element();
+      if (e != nullptr)
+        ret->push_back(e);
+      else die("Expected an element after a comma");
     }
-    return ret; 
+  } catch (Parser::Exception *p) {
+    for (auto i = ret->begin(); i != ret->end(); i++) {
+      delete *i;
+    }
+    delete ret;
+    throw p;
+  }
+  return ret; 
 }
 
-std::string
+  std::string
 Parser::parse_string()
 {
-    std::string ret;
-    consume("\"");
-    while (!peek('"')) {
-        if (peek('\\')) {
-            cur++;
-        }
-        ret.append(source + cur, 1);
-        cur++;
+  std::string ret;
+  consume("\"");
+  while (!peek('"')) {
+    if (peek('\\')) {
+      cur++;
     }
-    consume("\"");
-    return ret;
+    ret.append(source + cur, 1);
+    cur++;
+  }
+  consume("\"");
+  return ret;
 }
 
-int
+  int
 Parser::parse_int()
 {
-    std::string val;
-    int oldcur = cur;
-    while (isdigit(source[cur])) {
-        cur++;
-    }
-    if (oldcur == cur) die("Null element found");
-    val.append(source + oldcur, cur - oldcur);
-    return atoi(val.c_str());
+  std::string val;
+  int oldcur = cur;
+  while (isdigit(source[cur])) {
+    cur++;
+  }
+  if (oldcur == cur) die("Null element found");
+  val.append(source + oldcur, cur - oldcur);
+  return atoi(val.c_str());
 }
 
-std::pair<Element::Type, double>
+  std::pair<Element::Type, double>
 Parser::parse_numeric()
 {
-    Element::Type type = Element::Type::INT;
-    double num = (double)parse_int();
-    if (peek('.')) {
-        consume(".");
-        double factor = 1;
-        while (peek('0')) {
-            consume("0");
-            factor /= 10;
-        }
-        double val = (double)parse_int();
-        type = Element::Type::NUM;
-        while (val > 1) val /= 10;
-        num = num + val * factor;
+  Element::Type type = Element::Type::INT;
+  double num = (double)parse_int();
+  if (peek('.')) {
+    consume(".");
+    double factor = 1;
+    while (peek('0')) {
+      consume("0");
+      factor /= 10;
     }
-    return std::make_pair(type, num);
+    double val = (double)parse_int();
+    type = Element::Type::NUM;
+    while (val > 1) val /= 10;
+    num = num + val * factor;
+  }
+  return std::make_pair(type, num);
 }
 
-Element *
+  Element *
 Parser::element()
 {
-    // constrained element, for input()
-    Element::Type type;
-    bool constrained = false;
-    if (peek("integer")) {
-        consume("integer");
-        consume(":");
-        constrained = true;
-        type = Element::Type::INT;
-    } else if (peek("float")) {
-        consume("float");
-        consume(":");
-        constrained = true;
-        type = Element::Type::NUM;
-    } else if (peek("string")) {
-        consume("string");
-        consume(":");
-        constrained = true;
-        type = Element::Type::STR;
-    }
-    if (constrained) {
-        Element::Constraint constraint;
-        if (peek('*')) {
-            consume("*");
-            constraint = Element::Constraint::ANY;
-        } else if (peek('<')) {
-            consume("<");
-            constraint = Element::Constraint::LT;
-        } else if (peek('>')) {
-            consume(">");
-            constraint = Element::Constraint::GT;
-        } else {
-            constraint = Element::Constraint::EQ;
-        }
-        Element *ret = new Element;
-        ret->type = type;
-        ret->constraint = constraint;
-        std::pair<Element::Type, double> num_pair;
-        try {
-            if (constraint != Element::Constraint::ANY) {
-                switch (type) {
-                case Element::Type::INT:
-                    ret->int_value = parse_int();
-                    break;
-                case Element::Type::NUM:
-                    num_pair = parse_numeric();
-                    ret->num_value = num_pair.second;
-                    break;
-                case Element::Type::STR:
-                    ret->str_value = parse_string();
-                    break;
-                }
-            }
-        } catch (Parser::Exception *p) {
-            delete ret;
-            throw p;
-        }
-        return ret;
-    }
-    // concrete element, for output()
-    if (peek('"')) {
-        std::string str = parse_string();
-        Element *ret = new Element;
-        ret->type = Element::Type::STR;
-        ret->str_value = str;
-        return ret;
-    }
-    auto num_pair = parse_numeric();
-    Element *ret = new Element;
-    ret->type = num_pair.first;
-    if (ret->type == Element::Type::INT) {
-        ret->int_value = (int)num_pair.second;
+  // constrained element, for input()
+  Element::Type type;
+  bool constrained = false;
+  if (peek("integer")) {
+    consume("integer");
+    consume(":");
+    constrained = true;
+    type = Element::Type::INT;
+  } else if (peek("float")) {
+    consume("float");
+    consume(":");
+    constrained = true;
+    type = Element::Type::NUM;
+  } else if (peek("string")) {
+    consume("string");
+    consume(":");
+    constrained = true;
+    type = Element::Type::STR;
+  }
+  if (constrained) {
+    Element::Constraint constraint;
+    if (peek('*')) {
+      consume("*");
+      constraint = Element::Constraint::ANY;
+    } else if (peek('<')) {
+      consume("<");
+      constraint = Element::Constraint::LT;
+    } else if (peek('>')) {
+      consume(">");
+      constraint = Element::Constraint::GT;
     } else {
-        ret->num_value = num_pair.second;
+      constraint = Element::Constraint::EQ;
+    }
+    Element *ret = new Element;
+    ret->type = type;
+    ret->constraint = constraint;
+    std::pair<Element::Type, double> num_pair;
+    try {
+      if (constraint != Element::Constraint::ANY) {
+        switch (type) {
+          case Element::Type::INT:
+            ret->int_value = parse_int();
+            break;
+          case Element::Type::NUM:
+            num_pair = parse_numeric();
+            ret->num_value = num_pair.second;
+            break;
+          case Element::Type::STR:
+            ret->str_value = parse_string();
+            break;
+        }
+      }
+    } catch (Parser::Exception *p) {
+      delete ret;
+      throw p;
     }
     return ret;
+  }
+  // concrete element, for output()
+  if (peek('"')) {
+    std::string str = parse_string();
+    Element *ret = new Element;
+    ret->type = Element::Type::STR;
+    ret->str_value = str;
+    return ret;
+  }
+  auto num_pair = parse_numeric();
+  Element *ret = new Element;
+  ret->type = num_pair.first;
+  if (ret->type == Element::Type::INT) {
+    ret->int_value = (int)num_pair.second;
+  } else {
+    ret->num_value = num_pair.second;
+  }
+  return ret;
 }
