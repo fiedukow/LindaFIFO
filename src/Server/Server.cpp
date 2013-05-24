@@ -1,4 +1,5 @@
 #include "Server.h"
+#include "ParserToDatabaseProxy.h"
 #include <Parser/Parser.hpp>
 #include <iostream>
 #include <boost/lexical_cast.hpp>
@@ -6,13 +7,16 @@
 #include <signal.h>
 #include <sys/file.h>
 
-static Server* I_DONT_WANT_TO_LIVE_ON_THIS_PLANET_ANYMORE = NULL;
+static Server::Server* I_DONT_WANT_TO_LIVE_ON_THIS_PLANET_ANYMORE = NULL;
 
 static void signalHandler(int sig)
 {
   if(I_DONT_WANT_TO_LIVE_ON_THIS_PLANET_ANYMORE)
     I_DONT_WANT_TO_LIVE_ON_THIS_PLANET_ANYMORE->handlePosixSignal(sig);
 }
+
+namespace Server
+{
 
 Server::Server()
   : registerPipe_(new OwnedNamedPipe("/tmp/LINDA_REGISTER_PIPE")),
@@ -137,9 +141,12 @@ std::string Server::handleQuery(const std::string& query)
   if(operation.get() == NULL)
     return "INVALID QUERY";
   
-  //QUERY TYPE OUTPUT - output into DB and then go through all waiting
-  //QUERY TYPE INPUT/READ - read from DB and wait if nothing is there
-  return "OK";
+  ParserToDatabaseProxy answerHandler(db);
+  answerHandler.handleOperation(operation);
+  if(answerHandler.shouldLastOperationWaiting())
+    return "WAIT";
+  else
+    return answerHandler.getLastOperationAnswer();
 }
 
 OperationPtr Server::parseQuery(const std::string& query)
@@ -156,3 +163,5 @@ OperationPtr Server::parseQuery(const std::string& query)
     return OperationPtr(tmp);
   }
 }
+
+}//namespace Server

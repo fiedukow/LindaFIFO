@@ -4,12 +4,16 @@
 #include <list>
 #include <Common/NamedPipe.h>
 #include <signal.h>
-#include <boost/shared_ptr.hpp>
+#include <memory>
+#include "Database.h"
 
 typedef std::pair<OwnedPipeChannel, std::string> AddressedAnswer;
 
 class Operation;
-typedef boost::shared_ptr<Operation> OperationPtr;
+typedef std::shared_ptr<Operation> OperationPtr;
+
+namespace Server
+{
 
 class Server
 {
@@ -35,6 +39,9 @@ private:
   std::list<OwnedPipeChannel> clients_;
   std::list<AddressedAnswer> answerQueue_;
   bool stopped_;
+  Database db;
 };
+
+}//namespace Server
 
 #endif
