@@ -36,13 +36,8 @@ bool SelectDescription::doesTupleMatch(const Tuple& tuple) const
 }
 
 InsertDescription::InsertDescription(const Tuple& tuple)
-  : tuple(new Tuple(tuple))
+  : tuple(tuple)
 {}
-
-InsertDescription::~InsertDescription()
-{
-  delete tuple;
-}
 
 } // namespace Common
 

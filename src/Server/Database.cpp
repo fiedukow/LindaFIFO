@@ -31,7 +31,7 @@ Common::Tuple Database::input(const Common::SelectDescription& description)
 
 void Database::output(const Common::InsertDescription& description)
 {
-  tuplesCollection.insert(*description.tuple);
+  tuplesCollection.insert(description.tuple);
 }
 
 std::size_t Database::getTuplesCount() const

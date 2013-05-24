@@ -30,9 +30,8 @@ struct SelectDescription
 struct InsertDescription
 {
   InsertDescription(const Tuple&);
-  ~InsertDescription();
 
-  Tuple* tuple;
+  const Tuple tuple;
 };
 
 } // namespace Common
