@@ -17,7 +17,7 @@ IntFieldCondition::IntFieldCondition(const int value, ConditionType conditionTyp
     value(value)
 {}
 
-boost::logic::tribool IntFieldCondition::visit(const IntField& field) const
+bool IntFieldCondition::visit(const IntField& field) const
 {
   int fieldValue = field.getValue();
 
@@ -34,14 +34,14 @@ boost::logic::tribool IntFieldCondition::visit(const IntField& field) const
   }
 }
 
-boost::logic::tribool IntFieldCondition::visit(const FloatField& /*field*/) const
+bool IntFieldCondition::visit(const FloatField& /*field*/) const
 {
-  return boost::logic::indeterminate;
+  return false;
 }
 
-boost::logic::tribool IntFieldCondition::visit(const StringField& /*field*/) const
+bool IntFieldCondition::visit(const StringField& /*field*/) const
 {
-  return boost::logic::indeterminate;
+  return false;
 }
 
 FieldCondition* IntFieldCondition::clone() const
@@ -54,12 +54,12 @@ FloatFieldCondition::FloatFieldCondition(const float value, ConditionType condit
     value(value)
 {}
 
-boost::logic::tribool FloatFieldCondition::visit(const IntField& /*field*/) const
+bool FloatFieldCondition::visit(const IntField& /*field*/) const
 {
-  return boost::logic::indeterminate;
+  return false;
 }
 
-boost::logic::tribool FloatFieldCondition::visit(const FloatField& field) const
+bool FloatFieldCondition::visit(const FloatField& field) const
 {
   float fieldValue = field.getValue();
 
@@ -81,9 +81,9 @@ FieldCondition* FloatFieldCondition::clone() const
   return new FloatFieldCondition(*this);
 }
 
-boost::logic::tribool FloatFieldCondition::visit(const StringField& /*field*/) const
+bool FloatFieldCondition::visit(const StringField& /*field*/) const
 {
-  return boost::logic::indeterminate;
+  return false;
 }
 
 StringFieldCondition::StringFieldCondition(const std::string& value, ConditionType conditionType)
@@ -91,17 +91,17 @@ StringFieldCondition::StringFieldCondition(const std::string& value, ConditionTy
     value(value)
 {}
 
-boost::logic::tribool StringFieldCondition::visit(const IntField& /*field*/) const
+bool StringFieldCondition::visit(const IntField& /*field*/) const
 {
-  return boost::logic::indeterminate;
+  return false;
 }
 
-boost::logic::tribool StringFieldCondition::visit(const FloatField& /*field*/) const
+bool StringFieldCondition::visit(const FloatField& /*field*/) const
 {
-  return boost::logic::indeterminate;
+  return false;
 }
 
-boost::logic::tribool StringFieldCondition::visit(const StringField& field) const
+bool StringFieldCondition::visit(const StringField& field) const
 {
   std::string fieldValue = field.getValue();
 

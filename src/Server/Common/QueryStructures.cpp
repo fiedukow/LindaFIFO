@@ -35,7 +35,8 @@ bool SelectDescription::doesTupleMatch(const Tuple& tuple) const
     return false;
   auto iter = tuple.begin();
   auto condIter = fieldConditions.begin();
-  for (; iter != tuple.end() && condIter != fieldConditions.end(); ++iter, ++condIter)
+  for (; iter != tuple.end() && condIter != fieldConditions.end();
+         ++iter, ++condIter)
   {
     Field* field = *iter;
     FieldCondition* condition = *condIter;

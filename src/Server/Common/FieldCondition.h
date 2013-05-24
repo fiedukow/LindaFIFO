@@ -3,8 +3,6 @@
 
 #include <string>
 
-#include <boost/logic/tribool.hpp>
-
 namespace Server
 {
 
@@ -22,9 +20,9 @@ public:
 
   virtual ~FieldCondition() = default;
 
-  virtual boost::tribool visit(const IntField&) const = 0;
-  virtual boost::tribool visit(const FloatField&) const = 0;
-  virtual boost::tribool visit(const StringField&) const = 0;
+  virtual bool visit(const IntField&) const = 0;
+  virtual bool visit(const FloatField&) const = 0;
+  virtual bool visit(const StringField&) const = 0;
 
   virtual FieldCondition* clone() const = 0;
 
@@ -39,9 +37,9 @@ class IntFieldCondition : public FieldCondition
 public:
   IntFieldCondition(const int value, ConditionType conditionType);
 
-  virtual boost::tribool visit(const IntField&) const;
-  virtual boost::tribool visit(const FloatField&) const;
-  virtual boost::tribool visit(const StringField&) const;
+  virtual bool visit(const IntField&) const;
+  virtual bool visit(const FloatField&) const;
+  virtual bool visit(const StringField&) const;
 
   virtual FieldCondition* clone() const;
 
@@ -54,9 +52,9 @@ class FloatFieldCondition : public FieldCondition
 public:
   FloatFieldCondition(const float value, ConditionType conditionType);
 
-  virtual boost::tribool visit(const IntField&) const;
-  virtual boost::tribool visit(const FloatField&) const;
-  virtual boost::tribool visit(const StringField&) const;
+  virtual bool visit(const IntField&) const;
+  virtual bool visit(const FloatField&) const;
+  virtual bool visit(const StringField&) const;
 
   virtual FieldCondition* clone() const;
 
@@ -69,9 +67,9 @@ class StringFieldCondition : public FieldCondition
 public:
   StringFieldCondition(const std::string& value, ConditionType conditionType);
 
-  virtual boost::tribool visit(const IntField&) const;
-  virtual boost::tribool visit(const FloatField&) const;
-  virtual boost::tribool visit(const StringField&) const;
+  virtual bool visit(const IntField&) const;
+  virtual bool visit(const FloatField&) const;
+  virtual bool visit(const StringField&) const;
 
   virtual FieldCondition* clone() const;
 
