@@ -137,6 +137,8 @@ std::string Server::handleQuery(const std::string& query)
   if(operation.get() == NULL)
     return "INVALID QUERY";
   
+  //QUERY TYPE OUTPUT - output into DB and then go through all waiting
+  //QUERY TYPE INPUT/READ - read from DB and wait if nothing is there
   return "OK";
 }
 

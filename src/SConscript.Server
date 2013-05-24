@@ -10,7 +10,8 @@ envCopy.Append(
               )
 
 sourceTargets = [ 'main.cpp',
-                  'Server.cpp' ]
+                  'Server.cpp',
+                  'ParserToDatabaseProxy.cpp' ]
 
 targets = []
 for source in sourceTargets:
