@@ -112,8 +112,10 @@ void Server::handleIncomingQueries()
 void Server::handleAnswers()
 {
   std::cout << "Odpowiedzi..." << std::endl;
-  for(AddressedAnswer& addressedAnswer : answerQueue_)
+  while(answerQueue_.size() > 0)
   {
+    AddressedAnswer addressedAnswer = answerQueue_.front();
+    answerQueue_.pop_front();
     NamedPipeWriter writer = addressedAnswer.first.getServerWriter();
     if(!writer.tryOpen())
       continue;
