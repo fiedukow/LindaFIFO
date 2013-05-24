@@ -13,6 +13,14 @@ SelectDescription::SelectDescription(const FieldConditions& conditions)
   : fieldConditions(conditions)
 {}
 
+SelectDescription::SelectDescription(const SelectDescription& descr)
+{ // copy each FieldCondition, to avoid problems with double delete
+  for (FieldCondition* fc : descr.fieldConditions)
+  {
+    fieldConditions.push_back(fc->clone());
+  }
+}
+
 SelectDescription::~SelectDescription()
 {
   for (FieldCondition* fc : fieldConditions)
@@ -23,13 +31,16 @@ SelectDescription::~SelectDescription()
 
 bool SelectDescription::doesTupleMatch(const Tuple& tuple) const
 {
-  for (Field* field : tuple)
+  if (tuple.size() != fieldConditions.size())
+    return false;
+  auto iter = tuple.begin();
+  auto condIter = fieldConditions.begin();
+  for (; iter != tuple.end() && condIter != fieldConditions.end(); ++iter, ++condIter)
   {
-    for (FieldCondition* condition : fieldConditions)
-    {
-      if (!field->accept(*condition)) // indeterminate won't match this condition
-        return false;
-    }
+    Field* field = *iter;
+    FieldCondition* condition = *condIter;
+    if (!field->accept(*condition))
+      return false;
   }
 
   return true;

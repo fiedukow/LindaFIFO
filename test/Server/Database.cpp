@@ -41,7 +41,8 @@ BOOST_AUTO_TEST_CASE( Database_insertion_test )
 
   { 
     Common::SelectDescription::FieldConditions conditions = {
-        new Common::IntFieldCondition(5,Common::FieldCondition::Equal)
+        new Common::IntFieldCondition(5,Common::FieldCondition::Equal),
+        new Common::StringFieldCondition("",Common::FieldCondition::Any)
       };
 
     Common::SelectDescription description(conditions);

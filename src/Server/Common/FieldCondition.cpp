@@ -44,6 +44,11 @@ boost::logic::tribool IntFieldCondition::visit(const StringField& /*field*/) con
   return boost::logic::indeterminate;
 }
 
+FieldCondition* IntFieldCondition::clone() const
+{
+  return new IntFieldCondition(*this);
+}
+
 FloatFieldCondition::FloatFieldCondition(const float value, ConditionType conditionType)
   : FieldCondition(conditionType),
     value(value)
@@ -69,6 +74,11 @@ boost::logic::tribool FloatFieldCondition::visit(const FloatField& field) const
     case Any: // type matches
       return true;
   }
+}
+
+FieldCondition* FloatFieldCondition::clone() const
+{
+  return new FloatFieldCondition(*this);
 }
 
 boost::logic::tribool FloatFieldCondition::visit(const StringField& /*field*/) const
@@ -106,6 +116,11 @@ boost::logic::tribool StringFieldCondition::visit(const StringField& field) cons
     case Any: // type matches
       return true;
   }
+}
+
+FieldCondition* StringFieldCondition::clone() const
+{
+  return new StringFieldCondition(*this);
 }
 
 } // namespace Common

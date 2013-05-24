@@ -26,6 +26,8 @@ public:
   virtual boost::tribool visit(const FloatField&) const = 0;
   virtual boost::tribool visit(const StringField&) const = 0;
 
+  virtual FieldCondition* clone() const = 0;
+
 protected:
   FieldCondition(ConditionType conditionType);
 
@@ -41,6 +43,8 @@ public:
   virtual boost::tribool visit(const FloatField&) const;
   virtual boost::tribool visit(const StringField&) const;
 
+  virtual FieldCondition* clone() const;
+
 private:
   const int value;
 };
@@ -54,6 +58,8 @@ public:
   virtual boost::tribool visit(const FloatField&) const;
   virtual boost::tribool visit(const StringField&) const;
 
+  virtual FieldCondition* clone() const;
+
 private:
   const float value;
 };
@@ -66,6 +72,8 @@ public:
   virtual boost::tribool visit(const IntField&) const;
   virtual boost::tribool visit(const FloatField&) const;
   virtual boost::tribool visit(const StringField&) const;
+
+  virtual FieldCondition* clone() const;
 
 private:
   const std::string value;

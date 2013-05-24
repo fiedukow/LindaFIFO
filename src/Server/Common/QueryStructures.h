@@ -20,11 +20,12 @@ struct SelectDescription
   typedef std::vector<FieldCondition*> FieldConditions;
 
   SelectDescription(const FieldConditions&);
+  SelectDescription(const SelectDescription&);
   ~SelectDescription();
 
   bool doesTupleMatch(const Tuple& tuple) const;
 
-  const FieldConditions fieldConditions;
+  FieldConditions fieldConditions;
 };
 
 struct InsertDescription
