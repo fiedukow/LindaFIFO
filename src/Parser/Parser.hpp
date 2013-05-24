@@ -27,12 +27,10 @@ struct Operation {
 
   ~Operation()
   {
-    if (elements != nullptr) {
-      for (auto i = elements->begin(); i != elements->end(); i++) {
-        delete *i;
-      }
-      delete elements;
-    }
+    if (elements != nullptr) //todo make this check unnecessary
+      for (Element* element : *elements) 
+        delete element;
+    delete elements;  
   }
 };
 
