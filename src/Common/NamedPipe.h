@@ -74,4 +74,31 @@ private:
   const NamedPipePtr pipe_;
 };
 
+class PipeChannel
+{
+public:
+  PipeChannel(NamedPipePtr pipeClientServer, NamedPipePtr pipeServerClient);
+
+  NamedPipeReader getClientReader();
+  NamedPipeWriter getClientWriter();
+  NamedPipeReader getServerReader();
+  NamedPipeWriter getServerWriter();
+  
+protected:
+  NamedPipePtr pipeClientServer_;
+  NamedPipePtr pipeServerClient_;
+};
+
+class OwnedPipeChannel : public PipeChannel
+{
+public:
+  OwnedPipeChannel(int lindaId);
+};
+
+class WeakPipeChannel : public PipeChannel
+{
+public:
+  WeakPipeChannel(int lindaId);
+};
+
 #endif

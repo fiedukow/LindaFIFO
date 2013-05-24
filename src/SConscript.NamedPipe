@@ -9,7 +9,8 @@ envCopy.Append(
                 CPPPATH = '.'
               )
 
-sourceTargets = [ 'NamedPipe.cpp' ]
+sourceTargets = [ 'NamedPipe.cpp',
+                  'PipeNameBuilder.cpp' ]
 
 targets = []
 for source in sourceTargets:

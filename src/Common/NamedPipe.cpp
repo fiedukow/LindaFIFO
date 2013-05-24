@@ -1,4 +1,6 @@
 #include "NamedPipe.h"
+#include "PipeNameBuilder.h"
+
 #include <cassert>
 #include <unistd.h>
 #include <sys/stat.h>
@@ -22,7 +24,7 @@ void NamedPipe::close()
 {
   int toClose = descriptor_;
   descriptor_ = -1;
-  ::close(toClose);
+  assert(::close(toClose) == 0);
 }
 
 struct flock NamedPipe::buildFileLock(int type)
@@ -58,7 +60,7 @@ pid_t NamedPipe::getReadLockingPid() const
 {
   int chkDescriptor = ::open(name_.c_str(), READ_NONBLOCKING);
   if(chkDescriptor <= 0)
-    return -1;
+    return -1;    
 
   struct flock fl = buildFileLock(F_WRLCK);
   fl.l_pid = -1;
@@ -95,22 +97,22 @@ NamedPipeWriter::NamedPipeWriter(NamedPipePtr pipe)
 
 bool NamedPipeReader::open()
 {
-  pipe_->open(READ_BLOCKING);
+  return pipe_->open(READ_BLOCKING);
 }
 
 bool NamedPipeWriter::open()
 {
-  pipe_->open(WRITE_BLOCKING);
+  return pipe_->open(WRITE_BLOCKING);
 }
 
 bool NamedPipeReader::tryOpen()
 {
-  pipe_->open(READ_NONBLOCKING);
+  return pipe_->open(READ_NONBLOCKING);
 }
 
 bool NamedPipeWriter::tryOpen()
 {
-  pipe_->open(WRITE_NONBLOCKING);
+  return pipe_->open(WRITE_NONBLOCKING);
 }
 
 void NamedPipeReader::close()
@@ -126,7 +128,8 @@ void NamedPipeWriter::close()
 std::string NamedPipeReader::read()
 {
   pipe_->readLock();
-  ::read(pipe_->getFileDescriptor(), buffer, BUFSIZ);
+  buffer[0] = '\0';
+  int status = ::read(pipe_->getFileDescriptor(), buffer, BUFSIZ);
   pipe_->readUnlock();
   return std::string(buffer);
 }
@@ -140,5 +143,40 @@ void NamedPipeWriter::write(const std::string& data)
 {
   assert(data.size() < BUFSIZ);
   ::write(pipe_->getFileDescriptor(), data.c_str(), BUFSIZ);
+}
+
+PipeChannel::PipeChannel(NamedPipePtr pipeClientServer, NamedPipePtr pipeServerClient)
+  : pipeClientServer_(pipeClientServer),
+    pipeServerClient_(pipeServerClient)
+{}
+
+OwnedPipeChannel::OwnedPipeChannel(int lindaId)
+  : PipeChannel(NamedPipePtr(new OwnedNamedPipe(getClientToServerPipeName(lindaId))),
+                NamedPipePtr(new OwnedNamedPipe(getServerToClientPipeName(lindaId))))
+{}
+
+WeakPipeChannel::WeakPipeChannel(int lindaId)
+  : PipeChannel(NamedPipePtr(new NamedPipe(getClientToServerPipeName(lindaId))),
+                NamedPipePtr(new NamedPipe(getServerToClientPipeName(lindaId))))
+{}
+
+NamedPipeReader PipeChannel::getClientReader()
+{
+  return NamedPipeReader(pipeServerClient_);
+}
+
+NamedPipeWriter PipeChannel::getClientWriter()
+{
+  return NamedPipeWriter(pipeClientServer_);
+}
+
+NamedPipeReader PipeChannel::getServerReader()
+{
+  return NamedPipeReader(pipeClientServer_);
+}
+
+NamedPipeWriter PipeChannel::getServerWriter()
+{
+  return NamedPipeWriter(pipeServerClient_);
 }
 

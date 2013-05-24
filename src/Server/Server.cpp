@@ -63,17 +63,21 @@ void Server::handleNewClientRegistering()
   if(!writer.tryOpen())
     return;
 
-  pid_t registeringPid = registerPipe_->getReadLockingPid();
-  if(registeringPid == -1)
-    return;
+  pid_t registeringPid;
+  do //TODO what if client will die?
+  {
+    registeringPid = registerPipe_->getReadLockingPid();
+  } while(registeringPid == -1);
 
   std::cout << "Zablokowany przez " << registeringPid << std::endl;
 
   if(lastRegisteredPid_ != registeringPid)
   {
-    writer.write(boost::lexical_cast<std::string>(id_++));
+    OwnedPipeChannel newChannel(id_);
+    clients_.push_back(newChannel);
+    writer.write(boost::lexical_cast<std::string>(id_));
     lastRegisteredPid_ = registeringPid;
-    std::cout << "WRITING!" << std::endl;
+    ++id_;
   }
   else
     std::cout << "SKIP" << std::endl;
@@ -84,17 +88,43 @@ void Server::handleNewClientRegistering()
 void Server::handleIncomingQueries()
 {
   std::cout << "Zapytania..." << std::endl;
-  //FIXME implement this
+  for(OwnedPipeChannel& client : clients_)
+  {
+    NamedPipeReader reader = client.getServerReader();
+    if(!reader.tryOpen())
+      continue;
+
+    std::cout << "Awaiting orders..." << std::endl;
+
+    std::string msg = reader.read();    
+    std::cout << "Incoming message: " << msg << std::endl;
+    std::string answer = handleQuery(msg);
+    answerQueue_.push_back(AddressedAnswer(client, answer));      
+    reader.close();
+  } 
 }
 
 void Server::handleAnswers()
 {
   std::cout << "Odpowiedzi..." << std::endl;
-  //FIXME implement this
+  for(AddressedAnswer& addressedAnswer : answerQueue_)
+  {
+    NamedPipeWriter writer = addressedAnswer.first.getServerWriter();
+    if(!writer.tryOpen())
+      continue;
+    writer.write("OK"); 
+    writer.close();        
+  }
 }
 
 void Server::handleTimeouts()
 {
   std::cout << "Timeouty..." << std::endl;
   //FIXME implement this
+}
+
+std::string Server::handleQuery(const std::string& query)
+{
+  //FIXME handle that srsly
+  return "OK";
 }
