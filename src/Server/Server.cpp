@@ -1,4 +1,5 @@
 #include "Server.h"
+#include <Parser/Parser.hpp>
 #include <iostream>
 #include <boost/lexical_cast.hpp>
 #include <unistd.h>
@@ -97,10 +98,14 @@ void Server::handleIncomingQueries()
     std::cout << "Awaiting orders..." << std::endl;
 
     std::string msg = reader.read();    
+    reader.close();
+
+    if(msg.empty())
+      continue;
+
     std::cout << "Incoming message: " << msg << std::endl;
     std::string answer = handleQuery(msg);
     answerQueue_.push_back(AddressedAnswer(client, answer));      
-    reader.close();
   } 
 }
 
@@ -112,7 +117,7 @@ void Server::handleAnswers()
     NamedPipeWriter writer = addressedAnswer.first.getServerWriter();
     if(!writer.tryOpen())
       continue;
-    writer.write("OK"); 
+    writer.write(addressedAnswer.second); 
     writer.close();        
   }
 }
@@ -125,6 +130,25 @@ void Server::handleTimeouts()
 
 std::string Server::handleQuery(const std::string& query)
 {
-  //FIXME handle that srsly
+  std::cout << "PARSING QUERY: " << query << std::endl;
+  OperationPtr operation = parseQuery(query);
+  if(operation.get() == NULL)
+    return "INVALID QUERY";
+  
   return "OK";
+}
+
+OperationPtr Server::parseQuery(const std::string& query)
+{
+  Parser parser;
+  try
+  {
+    return OperationPtr(parser.parse(query.c_str()));
+  }
+  catch(Parser::Exception* e)
+  {
+    delete e; //TODO - pointer? srsly?
+    Operation* tmp = NULL;
+    return OperationPtr(tmp);
+  }
 }

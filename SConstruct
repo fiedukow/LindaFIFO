@@ -3,7 +3,7 @@
 env=DefaultEnvironment()
 
 env = Environment(
-                    CCFLAGS = '-std=c++11 -g -O0'
+                    CCFLAGS = '-std=c++11 -g -O0',
                  )
 
 client = env.SConscript('src/SConscript.Client', variant_dir='build', duplicate=0, exports = ['env'])
@@ -16,5 +16,6 @@ env.Depends(client,clientAPI)
 env.Depends(server,serverAPI)
 env.Depends(server,namedPipe)
 env.Depends(client,namedPipe)
+env.Depends(server,parser)
 tests = env.SConscript('test/SConscript.test', variant_dir='build_test', duplicate=0, exports = ['env'])
 env.Depends(tests,serverAPI)
