@@ -143,7 +143,7 @@ std::string Server::handleQuery(const std::string& query)
   
   ParserToDatabaseProxy answerHandler(db);
   answerHandler.handleOperation(operation);
-  if(answerHandler.shouldLastOperationWaiting())
+  if(answerHandler.shouldLastOperationWait())
     return "WAIT";
   else
     return answerHandler.getLastOperationAnswer();

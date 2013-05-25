@@ -29,7 +29,7 @@ void ParserToDatabaseProxy::handleOperation(OperationPtr operation)
   }
 }
 
-bool ParserToDatabaseProxy::shouldLastOperationWaiting() const
+bool ParserToDatabaseProxy::shouldLastOperationWait() const
 {
   return lastOperationWaiting_;
 }
@@ -66,6 +66,7 @@ void ParserToDatabaseProxy::handleSelectOperation(OperationPtr operation)
   }
   
   lastOperationAnswer_ = serializeAnswer(answer);
+  lastOperationWaiting_ = false;
   return;
 }
 

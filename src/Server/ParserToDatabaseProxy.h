@@ -21,7 +21,7 @@ public:
   ParserToDatabaseProxy(Database& db);
 
   void handleOperation(OperationPtr operation);
-  bool shouldLastOperationWaiting() const;
+  bool shouldLastOperationWait() const;
   std::string getLastOperationAnswer() const;
 
 private:
