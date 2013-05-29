@@ -154,6 +154,11 @@ Parser::element()
     consume(":");
     constrained = true;
     type = Element::Type::INT;
+  } else if (peek("int")) {
+    consume("int");
+    consume(":");
+    constrained = true;
+    type = Element::Type::INT;
   } else if (peek("float")) {
     consume("float");
     consume(":");
