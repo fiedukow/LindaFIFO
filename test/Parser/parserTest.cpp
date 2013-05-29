@@ -57,6 +57,7 @@ BOOST_AUTO_TEST_CASE( Parser_ok_test )
     BOOST_CHECK(parses_ok("input(float:3.5)"));
     BOOST_CHECK(parses_ok("input(float:<3.5)"));
     BOOST_CHECK(parses_ok("input(float:*)"));
+    BOOST_CHECK(parses_ok("input(float:*,int:*)"));
 }
 
 BOOST_AUTO_TEST_CASE( Parser_AST )
