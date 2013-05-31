@@ -130,15 +130,19 @@ Parser::parse_numeric()
   double num = (double)parse_int();
   if (peek('.')) {
     consume(".");
+    type = Element::Type::NUM;
     double factor = 1;
     while (peek('0')) {
       consume("0");
       factor /= 10;
     }
-    double val = (double)parse_int();
-    type = Element::Type::NUM;
-    while (val > 1) val /= 10;
-    num = num + val * factor;
+    if (isdigit(source[cur])) {
+        double val = (double)parse_int();
+        while (val > 1) val /= 10;
+        num = num + val * factor;
+    } else if (factor == 1) { // nothing after .
+        die("Malformed numeric");
+    }
   }
   return std::make_pair(type, num);
 }

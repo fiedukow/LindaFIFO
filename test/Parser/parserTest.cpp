@@ -100,6 +100,12 @@ BOOST_AUTO_TEST_CASE( Parser_AST )
     BOOST_CHECK(op->element(0).num_value == 3.14);
     delete op;
 
+    op = parser.parse("output(5.0)");
+    BOOST_CHECK(op->arity() == 1);
+    BOOST_CHECK(op->element(0).type == Element::Type::NUM);
+    BOOST_CHECK(op->element(0).num_value == 5.0);
+    delete op;
+
     op = parser.parse("input(3.014)");
     BOOST_CHECK(op->arity() == 1);
     BOOST_CHECK(op->element(0).num_value == 3.014);
