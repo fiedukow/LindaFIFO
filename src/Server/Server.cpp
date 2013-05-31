@@ -170,10 +170,9 @@ std::string Server::handleQuery(const std::string& query)
   if(answerHandler.shouldLastOperationWait())
     return "NO ITEM";
   else
+    if(answerHandler.hasLastOperationAddedElement())
+      handleWaitingQueue();
     return answerHandler.getLastOperationAnswer();
-
-  if(answerHandler.hasLastOperationAddedElement())
-    handleWaitingQueue();
 }
 
 OperationPtr Server::parseQuery(const std::string& query)

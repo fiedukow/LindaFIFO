@@ -69,12 +69,14 @@ void ParserToDatabaseProxy::handleSelectOperation(OperationPtr operation)
   catch(Exceptions::TupleDoesNotExistException& e)
   {
     lastOperationWaiting_ = true;
+    lastOperationAdded_ = false;
     lastOperationAnswer_ = "";
     return;
   }
   
   lastOperationAnswer_ = serializeAnswer(answer);
   lastOperationWaiting_ = false;
+  lastOperationAdded_ = false;
   return;
 }
 
@@ -83,6 +85,7 @@ void ParserToDatabaseProxy::handleInsertOperation(OperationPtr operation)
   Common::InsertDescription insertDesc = buildInsertDescription(operation);
   db_.output(insertDesc);
   lastOperationWaiting_ = false;
+  lastOperationAdded_ = true;
   lastOperationAnswer_ = "ADDED TUPLE TO DATABASE";
 }
 
