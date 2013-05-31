@@ -105,7 +105,10 @@ void Server::handleIncomingQueries()
 
     std::cout << "Incoming message: " << msg << std::endl;
     std::string answer = handleQuery(msg);
-    answerQueue_.push_back(AddressedAnswer(client, answer));
+    if(answer == "NO ITEM")
+      waitingQueue_.push_back(WaitingQuery(time(NULL) + 15, msg, client));
+    else
+      answerQueue_.push_back(AddressedAnswer(client, answer));
   } 
 }
 
@@ -124,10 +127,35 @@ void Server::handleAnswers()
   }
 }
 
+void Server::handleWaitingQueue()
+{
+  std::cout << "Waiting..." << std::endl;
+  for(auto it = waitingQueue_.begin(); it != waitingQueue_.end();)
+  {
+    std::string answer = handleQuery(it->query);
+    if(answer != "NO ITEM")
+    {
+      answerQueue_.push_back(AddressedAnswer(it->client, answer));
+      it = waitingQueue_.erase(it);
+    }
+    else
+      ++it;
+  }
+}
+
 void Server::handleTimeouts()
 {
   std::cout << "Timeouty..." << std::endl;
-  //FIXME implement this
+  for(auto it = waitingQueue_.begin(); it != waitingQueue_.end();)
+  {
+    if(it->timeoutTime <= time(NULL))
+    {
+      answerQueue_.push_back(AddressedAnswer(it->client, "TIMEOUT"));
+      it = waitingQueue_.erase(it);
+    }
+    else
+      ++it;
+  }
 }
 
 std::string Server::handleQuery(const std::string& query)
@@ -140,9 +168,12 @@ std::string Server::handleQuery(const std::string& query)
   ParserToDatabaseProxy answerHandler(db);
   answerHandler.handleOperation(operation);
   if(answerHandler.shouldLastOperationWait())
-    return "WAIT";
+    return "NO ITEM";
   else
     return answerHandler.getLastOperationAnswer();
+
+  if(answerHandler.hasLastOperationAddedElement())
+    handleWaitingQueue();
 }
 
 OperationPtr Server::parseQuery(const std::string& query)

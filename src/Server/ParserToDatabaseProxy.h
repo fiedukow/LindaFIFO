@@ -22,6 +22,7 @@ public:
 
   void handleOperation(OperationPtr operation);
   bool shouldLastOperationWait() const;
+  bool hasLastOperationAddedElement() const;
   std::string getLastOperationAnswer() const;
 
 private:
@@ -37,6 +38,7 @@ private:
 private:
   Database& db_;
   bool lastOperationWaiting_;
+  bool lastOperationAdded_;
   std::string lastOperationAnswer_;
 };
 

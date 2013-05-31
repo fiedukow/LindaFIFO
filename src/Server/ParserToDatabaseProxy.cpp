@@ -11,7 +11,10 @@ namespace Server
 {
 
 ParserToDatabaseProxy::ParserToDatabaseProxy(Database& db)
-  : db_(db)
+  : db_(db),
+    lastOperationWaiting_(false),
+    lastOperationAdded_(false),
+    lastOperationAnswer_("")
 {}
 
 void ParserToDatabaseProxy::handleOperation(OperationPtr operation)
@@ -32,6 +35,11 @@ void ParserToDatabaseProxy::handleOperation(OperationPtr operation)
 bool ParserToDatabaseProxy::shouldLastOperationWait() const
 {
   return lastOperationWaiting_;
+}
+
+bool ParserToDatabaseProxy::hasLastOperationAddedElement() const
+{
+  return lastOperationAdded_;
 }
 
 std::string ParserToDatabaseProxy::getLastOperationAnswer() const
