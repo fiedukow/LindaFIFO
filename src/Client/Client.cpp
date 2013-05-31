@@ -48,7 +48,10 @@ bool Client::registerInServer()
 
   std::string pipeId = reader.read();
   if(pipeId.empty())
-    registerInServer();
+  {
+    reader.close();
+    return registerInServer();
+  }
 
   reader.close();
   channel_ = new WeakPipeChannel(boost::lexical_cast<int>(pipeId));

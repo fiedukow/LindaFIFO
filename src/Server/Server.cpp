@@ -69,19 +69,19 @@ void Server::handleNewClientRegistering()
     return;
 
   pid_t registeringPid;
-  do //TODO what if client will die?
-  {
-    registeringPid = registerPipe_->getReadLockingPid();
-  } while(registeringPid == -1);
+  registeringPid = registerPipe_->getReadLockingPid();
 
   std::cout << "Zablokowany przez " << registeringPid << std::endl;
 
   if(lastRegisteredPid_ != registeringPid)
   {
-    clients_.push_back(OwnedPipeChannelPtr(new OwnedPipeChannel(id_)));
-    writer.write(boost::lexical_cast<std::string>(id_));
+    if(registeringPid > 0)
+    {
+      clients_.push_back(OwnedPipeChannelPtr(new OwnedPipeChannel(id_)));
+      writer.write(boost::lexical_cast<std::string>(id_));
+      ++id_;
+    }
     lastRegisteredPid_ = registeringPid;
-    ++id_;
   }
   else
     std::cout << "SKIP" << std::endl;
