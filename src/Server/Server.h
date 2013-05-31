@@ -7,7 +7,7 @@
 #include <memory>
 #include "Database.h"
 
-typedef std::pair<OwnedPipeChannel, std::string> AddressedAnswer;
+typedef std::pair<OwnedPipeChannelPtr, std::string> AddressedAnswer;
 
 class Operation;
 typedef std::shared_ptr<Operation> OperationPtr;
@@ -36,7 +36,7 @@ private:
   NamedPipePtr registerPipe_;
   int id_;
   pid_t lastRegisteredPid_;
-  std::list<OwnedPipeChannel> clients_;
+  std::list<OwnedPipeChannelPtr> clients_;
   std::list<AddressedAnswer> answerQueue_;
   bool stopped_;
   Database db;

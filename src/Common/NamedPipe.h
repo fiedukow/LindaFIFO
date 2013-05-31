@@ -78,15 +78,17 @@ class PipeChannel
 {
 public:
   PipeChannel(NamedPipePtr pipeClientServer, NamedPipePtr pipeServerClient);
+  ~PipeChannel();
 
-  NamedPipeReader getClientReader();
-  NamedPipeWriter getClientWriter();
-  NamedPipeReader getServerReader();
-  NamedPipeWriter getServerWriter();
+  NamedPipeReader  getClientReader();
+  NamedPipeWriter  getClientWriter();
+  NamedPipeReader& getServerReader();
+  NamedPipeWriter  getServerWriter();
   
 protected:
   NamedPipePtr pipeClientServer_;
   NamedPipePtr pipeServerClient_;
+  NamedPipeReader serverReader_;
 };
 
 class OwnedPipeChannel : public PipeChannel
@@ -95,10 +97,14 @@ public:
   OwnedPipeChannel(int lindaId);
 };
 
+typedef std::shared_ptr<OwnedPipeChannel> OwnedPipeChannelPtr;
+
 class WeakPipeChannel : public PipeChannel
 {
 public:
   WeakPipeChannel(int lindaId);
 };
+
+typedef std::shared_ptr<WeakPipeChannel> WeakPipeChannelPtr;
 
 #endif

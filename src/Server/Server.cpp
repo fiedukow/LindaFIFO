@@ -78,38 +78,34 @@ void Server::handleNewClientRegistering()
 
   if(lastRegisteredPid_ != registeringPid)
   {
-    OwnedPipeChannel newChannel(id_);
-    clients_.push_back(newChannel);
+    clients_.push_back(OwnedPipeChannelPtr(new OwnedPipeChannel(id_)));
     writer.write(boost::lexical_cast<std::string>(id_));
     lastRegisteredPid_ = registeringPid;
     ++id_;
   }
   else
     std::cout << "SKIP" << std::endl;
-
+  
   writer.close();   
 }
 
 void Server::handleIncomingQueries()
 {
   std::cout << "Zapytania..." << std::endl;
-  for(OwnedPipeChannel& client : clients_)
+  for(OwnedPipeChannelPtr client : clients_)
   {
-    NamedPipeReader reader = client.getServerReader();
-    if(!reader.tryOpen())
-      continue;
+    NamedPipeReader& reader = client->getServerReader();
 
     std::cout << "Awaiting orders..." << std::endl;
 
     std::string msg = reader.read();    
-    reader.close();
 
     if(msg.empty())
       continue;
 
     std::cout << "Incoming message: " << msg << std::endl;
     std::string answer = handleQuery(msg);
-    answerQueue_.push_back(AddressedAnswer(client, answer));      
+    answerQueue_.push_back(AddressedAnswer(client, answer));
   } 
 }
 
@@ -120,7 +116,7 @@ void Server::handleAnswers()
   {
     AddressedAnswer addressedAnswer = answerQueue_.front();
     answerQueue_.pop_front();
-    NamedPipeWriter writer = addressedAnswer.first.getServerWriter();
+    NamedPipeWriter writer = addressedAnswer.first->getServerWriter();
     if(!writer.tryOpen())
       continue;
     writer.write(addressedAnswer.second); 
