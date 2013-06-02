@@ -24,11 +24,11 @@ bool IntFieldCondition::visit(const IntField& field) const
   switch (conditionType)
   {
     case Less:
-      return (value < fieldValue);
+      return (fieldValue < value);
     case Greater:
-      return (value > fieldValue);
+      return (fieldValue > value);
     case Equal:
-      return (value == fieldValue);
+      return (fieldValue == value);
     case Any: // type matches
       return true;
   }
@@ -66,11 +66,11 @@ bool FloatFieldCondition::visit(const FloatField& field) const
   switch (conditionType)
   {
     case Less:
-      return (value < fieldValue);
+      return (fieldValue < value);
     case Greater:
-      return (value > fieldValue);
+      return (fieldValue > value);
     case Equal:
-      return (value == fieldValue);
+      return (fieldValue == value);
     case Any: // type matches
       return true;
   }
@@ -108,11 +108,11 @@ bool StringFieldCondition::visit(const StringField& field) const
   switch (conditionType)
   {
     case Less:
-      return (value < fieldValue);
+      return (fieldValue < value);
     case Greater:
-      return (value > fieldValue);
+      return (fieldValue > value);
     case Equal:
-      return (value == fieldValue);
+      return (fieldValue == value);
     case Any: // type matches
       return true;
   }

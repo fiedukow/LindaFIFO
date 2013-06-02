@@ -19,7 +19,7 @@ public:
   virtual ~Field() = default;
   virtual std::string asString() const = 0;
 
-  virtual boost::tribool accept(const FieldCondition&) const = 0;
+  virtual bool accept(const FieldCondition&) const = 0;
 };
 
 class IntField : public Field
@@ -29,7 +29,7 @@ public:
 
   virtual std::string asString() const;
 
-  virtual boost::tribool accept(const FieldCondition&) const;
+  virtual bool accept(const FieldCondition&) const;
 
   int getValue() const;
 
@@ -44,7 +44,7 @@ public:
 
   virtual std::string asString() const;
 
-  virtual boost::tribool accept(const FieldCondition&) const;
+  virtual bool accept(const FieldCondition&) const;
 
   float getValue() const;
 
@@ -59,7 +59,7 @@ public:
 
   virtual std::string asString() const;
 
-  virtual boost::tribool accept(const FieldCondition&) const;
+  virtual bool accept(const FieldCondition&) const;
 
   std::string getValue() const;
 

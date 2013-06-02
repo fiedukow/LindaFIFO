@@ -20,7 +20,7 @@ std::string IntField::asString() const
   return boost::lexical_cast<std::string>(value);
 }
 
-boost::tribool IntField::accept(const FieldCondition& fc) const
+bool IntField::accept(const FieldCondition& fc) const
 {
   return fc.visit(*this);
 }
@@ -41,7 +41,7 @@ std::string FloatField::asString() const
   return boost::lexical_cast<std::string>(value);
 }
 
-boost::tribool FloatField::accept(const FieldCondition& fc) const
+bool FloatField::accept(const FieldCondition& fc) const
 {
   return fc.visit(*this);
 }
@@ -62,7 +62,7 @@ std::string StringField::asString() const
   return value;
 }
 
-boost::tribool StringField::accept(const FieldCondition& fc) const
+bool StringField::accept(const FieldCondition& fc) const
 {
   return fc.visit(*this);
 }
