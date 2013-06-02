@@ -20,18 +20,7 @@ IntFieldCondition::IntFieldCondition(const int value, ConditionType conditionTyp
 bool IntFieldCondition::visit(const IntField& field) const
 {
   int fieldValue = field.getValue();
-
-  switch (conditionType)
-  {
-    case Less:
-      return (fieldValue < value);
-    case Greater:
-      return (fieldValue > value);
-    case Equal:
-      return (fieldValue == value);
-    case Any: // type matches
-      return true;
-  }
+  return compareUsingBuiltInComparators(fieldValue, value);
 }
 
 bool IntFieldCondition::visit(const FloatField& /*field*/) const
@@ -63,17 +52,7 @@ bool FloatFieldCondition::visit(const FloatField& field) const
 {
   float fieldValue = field.getValue();
 
-  switch (conditionType)
-  {
-    case Less:
-      return (fieldValue < value);
-    case Greater:
-      return (fieldValue > value);
-    case Equal:
-      return (fieldValue == value);
-    case Any: // type matches
-      return true;
-  }
+  return compareUsingBuiltInComparators(fieldValue, value);
 }
 
 FieldCondition* FloatFieldCondition::clone() const
@@ -104,18 +83,7 @@ bool StringFieldCondition::visit(const FloatField& /*field*/) const
 bool StringFieldCondition::visit(const StringField& field) const
 {
   std::string fieldValue = field.getValue();
-
-  switch (conditionType)
-  {
-    case Less:
-      return (fieldValue < value);
-    case Greater:
-      return (fieldValue > value);
-    case Equal:
-      return (fieldValue == value);
-    case Any: // type matches
-      return true;
-  }
+  return compareUsingBuiltInComparators(fieldValue, value);
 }
 
 FieldCondition* StringFieldCondition::clone() const

@@ -29,6 +29,22 @@ public:
 protected:
   FieldCondition(ConditionType conditionType);
 
+  template <typename T>
+  bool compareUsingBuiltInComparators(T fieldValue, T conditionValue) const
+  {
+    switch (conditionType)
+    {
+      case Less:
+        return (fieldValue < conditionValue);
+      case Greater:
+        return (fieldValue > conditionValue);
+      case Equal:
+        return (fieldValue == conditionValue);
+      case Any: // type matches
+        return true;
+    }
+  }
+
   ConditionType conditionType;
 };
 
