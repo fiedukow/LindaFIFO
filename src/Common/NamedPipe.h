@@ -35,7 +35,6 @@ protected:
 
 private:
   int descriptor_;
-  
 };
 typedef std::shared_ptr<NamedPipe> NamedPipePtr;
 

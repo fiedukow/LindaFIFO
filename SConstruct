@@ -12,6 +12,8 @@ server = env.SConscript('src/SConscript.Server', variant_dir='build', duplicate=
 serverAPI = env.SConscript('src/SConscript.ServerAPI', variant_dir='build', duplicate=0, exports = ['env'])
 namedPipe = env.SConscript('src/SConscript.NamedPipe', variant_dir='build', duplicate=0, exports = ['env'])
 parser = env.SConscript('src/SConscript.Parser', variant_dir='build', duplicate=0, exports = ['env'])
+env.Depends(client,parser)
+env.Depends(clientAPI,parser)
 env.Depends(client,clientAPI)
 env.Depends(server,serverAPI)
 env.Depends(server,namedPipe)

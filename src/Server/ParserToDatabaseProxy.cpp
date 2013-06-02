@@ -3,6 +3,7 @@
 #include "Exceptions.h"
 #include "Common/FieldCondition.h"
 #include "Common/Field.h"
+#include <Common/MagicMessages.h>
 #include <Parser/Parser.hpp>
 
 #include <cassert>
@@ -70,7 +71,7 @@ void ParserToDatabaseProxy::handleSelectOperation(OperationPtr operation)
   {
     lastOperationWaiting_ = true;
     lastOperationAdded_ = false;
-    lastOperationAnswer_ = "";
+    lastOperationAnswer_ = Linda::Messages::TIMEOUT_MESSAGE;
     return;
   }
   
@@ -86,7 +87,7 @@ void ParserToDatabaseProxy::handleInsertOperation(OperationPtr operation)
   db_.output(insertDesc);
   lastOperationWaiting_ = false;
   lastOperationAdded_ = true;
-  lastOperationAnswer_ = "ADDED TUPLE TO DATABASE";
+  lastOperationAnswer_ = Linda::Messages::ADDED_MESSAGE;
 }
 
 Common::SelectDescription ParserToDatabaseProxy::buildSelectDescription(OperationPtr operation)

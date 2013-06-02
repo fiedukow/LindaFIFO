@@ -19,7 +19,7 @@ for source in sourceTargets:
 
 program = envCopy.Program(target = '../bin/Client',
                           source = targets,
-                          LIBS = [ 'ClientAPI', 'NamedPipe' ],
+                          LIBS = [ 'ClientAPI', 'NamedPipe', 'Parser', 'boost_thread' ],
                           LIBPATH = [ '.' ])
 
 Return( 'program' )

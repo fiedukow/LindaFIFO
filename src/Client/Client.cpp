@@ -2,6 +2,9 @@
 #include <Common/NamedPipe.h>
 #include <iostream>
 #include <boost/lexical_cast.hpp>
+#include <ClientAPI/API.h>
+
+const std::string Client::BREAK_COMMAND = "STOP";
 
 Client::Client()
   : channel_(NULL)
@@ -16,7 +19,7 @@ void Client::operator()()
 {
   if(!registerInServer())
   {
-    std::cout << "Serwer nieaktywny!" << std::endl;
+    throw Linda::ServerInactiveException();
     return;
   }
 
@@ -26,14 +29,14 @@ void Client::operator()()
 
   while(true)
   {
-    std::cout << " >  ";
-    std::cout.flush();
-    std::cin >> query;
+    queryBQ_.pop(query);
+    if(query == BREAK_COMMAND)
+      break;
     writer.open();
     writer.write(query);
     writer.close();
     reader.open();
-    std::cout << "ANSWER IS: " << reader.read() << std::endl;
+    answerBQ_.push(reader.read());
     reader.close();
   }
 }
@@ -58,3 +61,12 @@ bool Client::registerInServer()
   return true;
 }
 
+BlockingQueue<std::string>& Client::getQueryBQ()
+{
+  return queryBQ_;
+}
+
+BlockingQueue<std::string>& Client::getAnswerBQ()
+{
+  return answerBQ_;
+}

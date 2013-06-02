@@ -9,8 +9,8 @@ envCopy.Append(
                 CPPPATH = '.'
               )
 
-sourceTargets = [ # nothing to build yet
-                  ]
+sourceTargets = [ 'API.cpp',
+                  'APIHelpers.cpp' ]
 
 targets = []
 for source in sourceTargets:

@@ -1,6 +1,7 @@
 #include "Server.h"
 #include "ParserToDatabaseProxy.h"
 #include <Parser/Parser.hpp>
+#include <Common/MagicMessages.h>
 #include <iostream>
 #include <boost/lexical_cast.hpp>
 #include <unistd.h>
@@ -105,7 +106,7 @@ void Server::handleIncomingQueries()
 
     std::cout << "Incoming message: " << msg << std::endl;
     std::string answer = handleQuery(msg);
-    if(answer == "NO ITEM")
+    if(answer == Linda::Messages::TIMEOUT_MESSAGE)
       waitingQueue_.push_back(WaitingQuery(time(NULL) + 15, msg, client));
     else
       answerQueue_.push_back(AddressedAnswer(client, answer));
@@ -133,7 +134,7 @@ void Server::handleWaitingQueue()
   for(auto it = waitingQueue_.begin(); it != waitingQueue_.end();)
   {
     std::string answer = handleQuery(it->query);
-    if(answer != "NO ITEM")
+    if(answer != Linda::Messages::TIMEOUT_MESSAGE)
     {
       answerQueue_.push_back(AddressedAnswer(it->client, answer));
       it = waitingQueue_.erase(it);
@@ -150,7 +151,7 @@ void Server::handleTimeouts()
   {
     if(it->timeoutTime <= time(NULL))
     {
-      answerQueue_.push_back(AddressedAnswer(it->client, "TIMEOUT"));
+      answerQueue_.push_back(AddressedAnswer(it->client, Linda::Messages::TIMEOUT_MESSAGE));
       it = waitingQueue_.erase(it);
     }
     else
@@ -163,12 +164,12 @@ std::string Server::handleQuery(const std::string& query)
   std::cout << "PARSING QUERY: " << query << std::endl;
   OperationPtr operation = parseQuery(query);
   if(operation.get() == NULL)
-    return "INVALID QUERY";
+    return Linda::Messages::INVALID_MESSAGE;
   
   ParserToDatabaseProxy answerHandler(db);
   answerHandler.handleOperation(operation);
   if(answerHandler.shouldLastOperationWait())
-    return "NO ITEM";
+    return Linda::Messages::TIMEOUT_MESSAGE;
   else
     if(answerHandler.hasLastOperationAddedElement())
       handleWaitingQueue();
