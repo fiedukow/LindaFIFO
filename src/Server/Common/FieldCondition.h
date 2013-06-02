@@ -16,7 +16,7 @@ class StringField;
 class FieldCondition
 {
 public:
-  enum ConditionType { Less, Equal, Greater, Any };
+  enum ConditionType { Less, LessEqual, Equal, Greater, GreaterEqual, Any };
 
   virtual ~FieldCondition() = default;
 
@@ -36,8 +36,12 @@ protected:
     {
       case Less:
         return (fieldValue < conditionValue);
+      case LessEqual:
+        return (fieldValue <= conditionValue);
       case Greater:
         return (fieldValue > conditionValue);
+      case GreaterEqual:
+        return (fieldValue >= conditionValue);
       case Equal:
         return (fieldValue == conditionValue);
       case Any: // type matches
