@@ -10,7 +10,6 @@ envCopy.Append(
               )
 
 sourceTargets = [ 'main.cpp',
-                  'Client.cpp'
                   ]
 
 targets = []

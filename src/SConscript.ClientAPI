@@ -10,7 +10,8 @@ envCopy.Append(
               )
 
 sourceTargets = [ 'API.cpp',
-                  'APIHelpers.cpp' ]
+                  'APIHelpers.cpp',
+                  'Client.cpp' ]
 
 targets = []
 for source in sourceTargets:

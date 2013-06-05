@@ -1,5 +1,5 @@
-#include "Client.h"
 #include <boost/thread.hpp>
+#include <ClientAPI/Client.h>
 #include <ClientAPI/API.h>
 #include <iostream>
 

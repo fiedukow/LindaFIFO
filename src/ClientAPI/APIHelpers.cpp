@@ -1,7 +1,7 @@
 #include "APIHelpers.h"
 #include "API.h"
+#include "Client.h"
 #include <Common/MagicMessages.h>
-#include <Client/Client.h>
 #include <boost/thread.hpp>
 
 namespace Linda
