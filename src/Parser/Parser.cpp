@@ -45,8 +45,10 @@ Parser::TOP()
         Element *last = ret->elements->at(ret->arity() - 1);
         if (last->type == Element::Type::INT)
             ret->timeout = last->int_value;
-        else
+        else if (last->type == Element::Type::NUM)
             ret->timeout = last->num_value;
+        else
+            die("Cannot use string as a timeout");
         ret->elements->pop_back();
         delete last;
     }

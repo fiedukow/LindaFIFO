@@ -254,6 +254,7 @@ BOOST_AUTO_TEST_CASE( Parser_fail_test )
     BOOST_CHECK(throws_ok("input(integer:<)"));
     BOOST_CHECK(throws_ok("output()"));
     BOOST_CHECK(throws_ok("read(2)"));
+    BOOST_CHECK(throws_ok("read(integer:*,\"foo\")"));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
