@@ -61,6 +61,7 @@ BOOST_AUTO_TEST_CASE( Parser_ok_test )
     BOOST_CHECK(parses_ok("output(5.0)"));
     BOOST_CHECK(parses_ok("output(4.34)"));
     BOOST_CHECK(parses_ok("read(2)"));
+    BOOST_CHECK(parses_ok("input(string:==\"foo\")"));
 }
 
 BOOST_AUTO_TEST_CASE( Parser_AST )
@@ -208,6 +209,13 @@ BOOST_AUTO_TEST_CASE( Parser_AST )
     BOOST_CHECK(op->arity() == 1);
     BOOST_CHECK(op->element(0).type == Element::Type::NUM);
     BOOST_CHECK(op->element(0).constraint == Element::Constraint::GEQ);
+    delete op;
+
+    op = parser.parse("input(string:==\"foo\")");
+    BOOST_CHECK(op->arity() == 1);
+    BOOST_CHECK(op->element(0).type == Element::Type::STR);
+    BOOST_CHECK(op->element(0).constraint == Element::Constraint::EQ);
+    BOOST_CHECK(op->element(0).str_value == "foo");
     delete op;
 
     op = parser.parse("input(float:*)");

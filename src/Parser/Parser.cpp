@@ -196,6 +196,7 @@ Parser::element()
           constraint = Element::Constraint::GT;
       }
     } else {
+      if (peek("==")) consume("==");
       constraint = Element::Constraint::EQ;
     }
     Element *ret = new Element;
