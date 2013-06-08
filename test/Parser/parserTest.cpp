@@ -37,31 +37,30 @@ BOOST_AUTO_TEST_SUITE( Parser_test )
 
 BOOST_AUTO_TEST_CASE( Parser_ok_test )
 {
-    BOOST_CHECK(parses_ok("input(5)"));
-    BOOST_CHECK(parses_ok("input(55)"));
-    BOOST_CHECK(parses_ok("input(55,5)"));
-    BOOST_CHECK(parses_ok("input(55, 5)"));
-    BOOST_CHECK(parses_ok("input(55 , 5)"));
-    BOOST_CHECK(parses_ok("input(3.14)"));
-    BOOST_CHECK(parses_ok("input(\"\")"));
-    BOOST_CHECK(parses_ok("input(\"chuj\")"));
-    BOOST_CHECK(parses_ok("input(\"foo\", \"bar\", \"baz\")"));
-    BOOST_CHECK(parses_ok("input(\"fo\\\"o\")"));
-    BOOST_CHECK(parses_ok("input(integer:5)"));
-    BOOST_CHECK(parses_ok("input(integer:*)"));
-    BOOST_CHECK(parses_ok("input(integer:>3)"));
-    BOOST_CHECK(parses_ok("input(integer:<3)"));
-    BOOST_CHECK(parses_ok("input(string:*)"));
-    BOOST_CHECK(parses_ok("input(string:\"foo\")"));
-    BOOST_CHECK(parses_ok("input(float:>3.5)"));
-    BOOST_CHECK(parses_ok("input(float:3.5)"));
-    BOOST_CHECK(parses_ok("input(float:<3.5)"));
-    BOOST_CHECK(parses_ok("input(float:*)"));
-    BOOST_CHECK(parses_ok("input(float:*,int:*)"));
+    BOOST_CHECK(parses_ok("output(5)"));
+    BOOST_CHECK(parses_ok("output(55)"));
+    BOOST_CHECK(parses_ok("output(55,5)"));
+    BOOST_CHECK(parses_ok("output(55, 5)"));
+    BOOST_CHECK(parses_ok("output(55 , 5)"));
+    BOOST_CHECK(parses_ok("output(3.14)"));
+    BOOST_CHECK(parses_ok("output(\"\")"));
+    BOOST_CHECK(parses_ok("output(\"chuj\")"));
+    BOOST_CHECK(parses_ok("output(\"foo\", \"bar\", \"baz\")"));
+    BOOST_CHECK(parses_ok("output(\"fo\\\"o\")"));
+    BOOST_CHECK(parses_ok("output(integer:5)"));
+    BOOST_CHECK(parses_ok("output(integer:*)"));
+    BOOST_CHECK(parses_ok("output(integer:>3)"));
+    BOOST_CHECK(parses_ok("output(integer:<3)"));
+    BOOST_CHECK(parses_ok("output(string:*)"));
+    BOOST_CHECK(parses_ok("output(string:\"foo\")"));
+    BOOST_CHECK(parses_ok("output(float:>3.5)"));
+    BOOST_CHECK(parses_ok("output(float:3.5)"));
+    BOOST_CHECK(parses_ok("output(float:<3.5)"));
+    BOOST_CHECK(parses_ok("output(float:*)"));
+    BOOST_CHECK(parses_ok("output(float:*,int:*)"));
     BOOST_CHECK(parses_ok("output(5.0)"));
     BOOST_CHECK(parses_ok("output(4.34)"));
-    BOOST_CHECK(parses_ok("read(2)"));
-    BOOST_CHECK(parses_ok("input(string:==\"foo\")"));
+    BOOST_CHECK(parses_ok("output(string:==\"foo\")"));
 }
 
 BOOST_AUTO_TEST_CASE( Parser_AST )
@@ -225,8 +224,8 @@ BOOST_AUTO_TEST_CASE( Parser_AST )
     BOOST_CHECK(op->element(0).constraint == Element::Constraint::ANY);
     delete op;
 
-    op = parser.parse("read(2.3)");
-    BOOST_CHECK(op->arity() == 0);
+    op = parser.parse("read(integer:*, 2.3)");
+    BOOST_CHECK(op->arity() == 1);
     BOOST_CHECK(op->timeout == 2.3);
     delete op;
 
@@ -253,6 +252,8 @@ BOOST_AUTO_TEST_CASE( Parser_fail_test )
     BOOST_CHECK(throws_ok("input(integer5)"));
     BOOST_CHECK(throws_ok("input(integer:>)"));
     BOOST_CHECK(throws_ok("input(integer:<)"));
+    BOOST_CHECK(throws_ok("output()"));
+    BOOST_CHECK(throws_ok("read(2)"));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

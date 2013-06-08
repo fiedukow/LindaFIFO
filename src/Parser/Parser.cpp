@@ -254,3 +254,17 @@ Parser::element()
   }
   return ret;
 }
+
+Operation *
+Parser::parse(const char *s)
+{
+    source = s;
+    cur = 0;
+    Operation *ret = TOP();
+    // disallow 0-length elements
+    if (ret->arity() == 0) {
+        delete ret;
+        die("0 elements disallowed");
+    }
+    return ret;
+}
