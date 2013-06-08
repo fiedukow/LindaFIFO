@@ -181,10 +181,20 @@ Parser::element()
       constraint = Element::Constraint::ANY;
     } else if (peek('<')) {
       consume("<");
-      constraint = Element::Constraint::LT;
+      if (peek('=')) {
+          consume("=");
+          constraint = Element::Constraint::LEQ;
+      } else {
+          constraint = Element::Constraint::LT;
+      }
     } else if (peek('>')) {
       consume(">");
-      constraint = Element::Constraint::GT;
+      if (peek('=')) {
+          consume("=");
+          constraint = Element::Constraint::GEQ;
+      } else {
+          constraint = Element::Constraint::GT;
+      }
     } else {
       constraint = Element::Constraint::EQ;
     }

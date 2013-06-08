@@ -9,7 +9,7 @@
 
 struct Element {
   enum Type { INT, NUM, STR };
-  enum Constraint { ANY, GT, LT, EQ };
+  enum Constraint { ANY, GT, GEQ, LT, LEQ, EQ };
   Type type;
   Constraint constraint;
   int int_value;

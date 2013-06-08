@@ -198,6 +198,18 @@ BOOST_AUTO_TEST_CASE( Parser_AST )
     BOOST_CHECK(op->element(0).constraint == Element::Constraint::LT);
     delete op;
 
+    op = parser.parse("input(float:<=3.5)");
+    BOOST_CHECK(op->arity() == 1);
+    BOOST_CHECK(op->element(0).type == Element::Type::NUM);
+    BOOST_CHECK(op->element(0).constraint == Element::Constraint::LEQ);
+    delete op;
+
+    op = parser.parse("input(float:>=3.5)");
+    BOOST_CHECK(op->arity() == 1);
+    BOOST_CHECK(op->element(0).type == Element::Type::NUM);
+    BOOST_CHECK(op->element(0).constraint == Element::Constraint::GEQ);
+    delete op;
+
     op = parser.parse("input(float:*)");
     BOOST_CHECK(op->arity() == 1);
     BOOST_CHECK(op->element(0).type == Element::Type::NUM);
