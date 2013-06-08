@@ -19,10 +19,11 @@ targets = []
 for source in modelSourceTargets:
   targets.append(serverDir + '/' + source)
 targets.append('Parser/parserTest.cpp')
+targets.append('QA/qa.cpp')
 
 # Build one or more test runners.
 program = envCopy.Program('test', targets,
-                          LIBS=['boost_unit_test_framework', 'ServerAPI', 'Parser'],
+                          LIBS=['boost_unit_test_framework','ClientAPI',  'ServerAPI', 'Parser','boost_thread', 'NamedPipe' ],
                           LIBPATH='../build')
 # Depend on the runner to ensure that it's built before running it - Note: using abspath.
 test_alias = Alias('test', [program], program[0].abspath)
