@@ -218,11 +218,13 @@ Parser::element()
     std::string str = parse_string();
     Element *ret = new Element;
     ret->type = Element::Type::STR;
+    ret->constraint = Element::Constraint::EQ;
     ret->str_value = str;
     return ret;
   }
   auto num_pair = parse_numeric();
   Element *ret = new Element;
+  ret->constraint = Element::Constraint::EQ;
   ret->type = num_pair.first;
   if (ret->type == Element::Type::INT) {
     ret->int_value = (int)num_pair.second;

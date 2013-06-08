@@ -60,7 +60,7 @@ BOOST_AUTO_TEST_CASE( Parser_ok_test )
     BOOST_CHECK(parses_ok("input(float:*,int:*)"));
     BOOST_CHECK(parses_ok("output(5.0)"));
     BOOST_CHECK(parses_ok("output(4.34)"));
-    BOOST_CHECK(!parses_ok("read(2)"));
+    BOOST_CHECK(parses_ok("read(2)"));
 }
 
 BOOST_AUTO_TEST_CASE( Parser_AST )
@@ -202,6 +202,20 @@ BOOST_AUTO_TEST_CASE( Parser_AST )
     BOOST_CHECK(op->arity() == 1);
     BOOST_CHECK(op->element(0).type == Element::Type::NUM);
     BOOST_CHECK(op->element(0).constraint == Element::Constraint::ANY);
+    delete op;
+
+    op = parser.parse("read(2)");
+    BOOST_CHECK(op->arity() == 1);
+    BOOST_CHECK(op->element(0).type == Element::Type::INT);
+    BOOST_CHECK(op->element(0).constraint == Element::Constraint::EQ);
+    BOOST_CHECK(op->element(0).int_value == 2);
+    delete op;
+
+    op = parser.parse("read(3)");
+    BOOST_CHECK(op->arity() == 1);
+    BOOST_CHECK(op->element(0).type == Element::Type::INT);
+    BOOST_CHECK(op->element(0).constraint == Element::Constraint::EQ);
+    BOOST_CHECK(op->element(0).int_value == 3);
     delete op;
 }
 
