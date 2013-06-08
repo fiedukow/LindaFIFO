@@ -40,6 +40,16 @@ Parser::TOP()
     ret->type = operation();
     consume("(");
     ret->elements = elements();
+    if (ret->type != Operation::Type::OUTPUT) {
+        // last element is actually a timeout
+        Element *last = ret->elements->at(ret->arity() - 1);
+        if (last->type == Element::Type::INT)
+            ret->timeout = last->int_value;
+        else
+            ret->timeout = last->num_value;
+        ret->elements->pop_back();
+        delete last;
+    }
     consume(")");
   } catch (Parser::Exception *p) {
     delete ret;

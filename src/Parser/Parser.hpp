@@ -21,6 +21,7 @@ struct Operation {
   enum Type { INPUT, OUTPUT, READ };
   Type type;
   std::vector<Element*>* elements = nullptr;
+  double timeout = 0;
 
   Element& element(int n) { return *((*elements)[n]); }
   int arity() { return elements == nullptr ? 0 : elements->size(); }

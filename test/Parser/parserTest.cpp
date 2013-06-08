@@ -67,36 +67,36 @@ BOOST_AUTO_TEST_CASE( Parser_ok_test )
 BOOST_AUTO_TEST_CASE( Parser_AST )
 {
     Operation *op;
-    op = parser.parse("input(5)");
+    op = parser.parse("output(5)");
     BOOST_CHECK(op->arity() == 1);
     BOOST_CHECK(op->element(0).type == Element::Type::INT);
     BOOST_CHECK(op->element(0).int_value == 5);
     delete op;
 
-    op = parser.parse("input(55)");
+    op = parser.parse("output(55)");
     BOOST_CHECK(op->arity() == 1);
     BOOST_CHECK(op->element(0).int_value == 55);
     delete op;
 
-    op = parser.parse("input(55,5)");
+    op = parser.parse("output(55,5)");
     BOOST_CHECK(op->arity() == 2);
     BOOST_CHECK(op->element(0).int_value == 55);
     BOOST_CHECK(op->element(1).int_value == 5);
     delete op;
 
-    op = parser.parse("input(55, 5)");
+    op = parser.parse("output(55, 5)");
     BOOST_CHECK(op->arity() == 2);
     BOOST_CHECK(op->element(0).int_value == 55);
     BOOST_CHECK(op->element(1).int_value == 5);
     delete op;
 
-    op = parser.parse("input(55 , 5)");
+    op = parser.parse("output(55 , 5)");
     BOOST_CHECK(op->arity() == 2);
     BOOST_CHECK(op->element(0).int_value == 55);
     BOOST_CHECK(op->element(1).int_value == 5);
     delete op;
 
-    op = parser.parse("input(3.14)");
+    op = parser.parse("output(3.14)");
     BOOST_CHECK(op->arity() == 1);
     BOOST_CHECK(op->element(0).type == Element::Type::NUM);
     BOOST_CHECK(op->element(0).num_value == 3.14);
@@ -108,24 +108,24 @@ BOOST_AUTO_TEST_CASE( Parser_AST )
     BOOST_CHECK(op->element(0).num_value == 5.0);
     delete op;
 
-    op = parser.parse("input(3.014)");
+    op = parser.parse("output(3.014)");
     BOOST_CHECK(op->arity() == 1);
     BOOST_CHECK(op->element(0).num_value == 3.014);
     delete op;
 
-    op = parser.parse("input(\"\")");
+    op = parser.parse("output(\"\")");
     BOOST_CHECK(op->arity() == 1);
     BOOST_CHECK(op->element(0).type == Element::Type::STR);
     BOOST_CHECK(op->element(0).str_value == "");
     delete op;
 
-    op = parser.parse("input(\"chuj\")");
+    op = parser.parse("output(\"chuj\")");
     BOOST_CHECK(op->arity() == 1);
     BOOST_CHECK(op->element(0).type == Element::Type::STR);
     BOOST_CHECK(op->element(0).str_value == "chuj");
     delete op;
 
-    op = parser.parse("input(\"foo\", \"bar\", \"baz\")");
+    op = parser.parse("output(\"foo\", \"bar\", \"baz\")");
     BOOST_CHECK(op->arity() == 3);
     BOOST_CHECK(op->element(0).type == Element::Type::STR);
     BOOST_CHECK(op->element(0).str_value == "foo");
@@ -135,107 +135,106 @@ BOOST_AUTO_TEST_CASE( Parser_AST )
     BOOST_CHECK(op->element(2).str_value == "baz");
     delete op;
 
-    op = parser.parse("input(\"fo\\\"o\")");
+    op = parser.parse("output(\"fo\\\"o\")");
     BOOST_CHECK(op->arity() == 1);
     BOOST_CHECK(op->element(0).type == Element::Type::STR);
     BOOST_CHECK(op->element(0).str_value == "fo\"o");
     delete op;
 
-    op = parser.parse("input(integer:5)");
+    op = parser.parse("input(integer:5, 0)");
     BOOST_CHECK(op->arity() == 1);
     BOOST_CHECK(op->element(0).type == Element::Type::INT);
     BOOST_CHECK(op->element(0).constraint == Element::Constraint::EQ);
     BOOST_CHECK(op->element(0).int_value == 5);
+    BOOST_CHECK(op->timeout == 0);
     delete op;
 
-    op = parser.parse("input(integer:*)");
+    op = parser.parse("input(integer:*, 0)");
     BOOST_CHECK(op->arity() == 1);
     BOOST_CHECK(op->element(0).type == Element::Type::INT);
     BOOST_CHECK(op->element(0).constraint == Element::Constraint::ANY);
     delete op;
 
-    op = parser.parse("input(integer:>3)");
+    op = parser.parse("input(integer:>3, 0)");
     BOOST_CHECK(op->arity() == 1);
     BOOST_CHECK(op->element(0).type == Element::Type::INT);
     BOOST_CHECK(op->element(0).constraint == Element::Constraint::GT);
     BOOST_CHECK(op->element(0).int_value == 3);
     delete op;
 
-    op = parser.parse("input(integer:<3)");
+    op = parser.parse("input(integer:<3, 0)");
     BOOST_CHECK(op->arity() == 1);
     BOOST_CHECK(op->element(0).type == Element::Type::INT);
     BOOST_CHECK(op->element(0).constraint == Element::Constraint::LT);
     BOOST_CHECK(op->element(0).int_value == 3);
     delete op;
 
-    op = parser.parse("input(string:*)");
+    op = parser.parse("input(string:*, 0)");
     BOOST_CHECK(op->arity() == 1);
     BOOST_CHECK(op->element(0).type == Element::Type::STR);
     BOOST_CHECK(op->element(0).constraint == Element::Constraint::ANY);
     delete op;
 
-    op = parser.parse("input(string:\"foo\")");
+    op = parser.parse("input(string:\"foo\", 0)");
     BOOST_CHECK(op->arity() == 1);
     BOOST_CHECK(op->element(0).constraint == Element::Constraint::EQ);
     BOOST_CHECK(op->element(0).str_value == "foo");
     delete op;
 
-    op = parser.parse("input(float:>3.5)");
+    op = parser.parse("input(float:>3.5, 0)");
     BOOST_CHECK(op->arity() == 1);
     BOOST_CHECK(op->element(0).type == Element::Type::NUM);
     BOOST_CHECK(op->element(0).constraint == Element::Constraint::GT);
     BOOST_CHECK(op->element(0).num_value == 3.5);
     delete op;
 
-    op = parser.parse("input(float:3.5)");
+    op = parser.parse("input(float:3.5, 0)");
     BOOST_CHECK(op->arity() == 1);
     BOOST_CHECK(op->element(0).type == Element::Type::NUM);
     BOOST_CHECK(op->element(0).constraint == Element::Constraint::EQ);
     delete op;
 
-    op = parser.parse("input(float:<3.5)");
+    op = parser.parse("input(float:<3.5, 0)");
     BOOST_CHECK(op->arity() == 1);
     BOOST_CHECK(op->element(0).type == Element::Type::NUM);
     BOOST_CHECK(op->element(0).constraint == Element::Constraint::LT);
     delete op;
 
-    op = parser.parse("input(float:<=3.5)");
+    op = parser.parse("input(float:<=3.5, 0)");
     BOOST_CHECK(op->arity() == 1);
     BOOST_CHECK(op->element(0).type == Element::Type::NUM);
     BOOST_CHECK(op->element(0).constraint == Element::Constraint::LEQ);
     delete op;
 
-    op = parser.parse("input(float:>=3.5)");
+    op = parser.parse("input(float:>=3.5, 0)");
     BOOST_CHECK(op->arity() == 1);
     BOOST_CHECK(op->element(0).type == Element::Type::NUM);
     BOOST_CHECK(op->element(0).constraint == Element::Constraint::GEQ);
     delete op;
 
-    op = parser.parse("input(string:==\"foo\")");
+    op = parser.parse("input(string:==\"foo\", 0)");
     BOOST_CHECK(op->arity() == 1);
     BOOST_CHECK(op->element(0).type == Element::Type::STR);
     BOOST_CHECK(op->element(0).constraint == Element::Constraint::EQ);
     BOOST_CHECK(op->element(0).str_value == "foo");
     delete op;
 
-    op = parser.parse("input(float:*)");
+    op = parser.parse("input(float:*, 0)");
     BOOST_CHECK(op->arity() == 1);
     BOOST_CHECK(op->element(0).type == Element::Type::NUM);
     BOOST_CHECK(op->element(0).constraint == Element::Constraint::ANY);
     delete op;
 
-    op = parser.parse("read(2)");
-    BOOST_CHECK(op->arity() == 1);
-    BOOST_CHECK(op->element(0).type == Element::Type::INT);
-    BOOST_CHECK(op->element(0).constraint == Element::Constraint::EQ);
-    BOOST_CHECK(op->element(0).int_value == 2);
+    op = parser.parse("read(2.3)");
+    BOOST_CHECK(op->arity() == 0);
+    BOOST_CHECK(op->timeout == 2.3);
     delete op;
 
-    op = parser.parse("read(3)");
+    op = parser.parse("input(integer:*, 3)");
     BOOST_CHECK(op->arity() == 1);
     BOOST_CHECK(op->element(0).type == Element::Type::INT);
-    BOOST_CHECK(op->element(0).constraint == Element::Constraint::EQ);
-    BOOST_CHECK(op->element(0).int_value == 3);
+    BOOST_CHECK(op->element(0).constraint == Element::Constraint::ANY);
+    BOOST_CHECK(op->timeout == 3.0);
     delete op;
 }
 
