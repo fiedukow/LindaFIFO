@@ -77,17 +77,22 @@ class PipeChannel
 {
 public:
   PipeChannel(NamedPipePtr pipeClientServer, NamedPipePtr pipeServerClient);
+  PipeChannel(const PipeChannel&) = delete;
   ~PipeChannel();
 
   NamedPipeReader  getClientReader();
   NamedPipeWriter  getClientWriter();
   NamedPipeReader& getServerReader();
   NamedPipeWriter  getServerWriter();
+
+private:
+  void ensureServerReaderClosed();
+  void ensureServerReaderOpened();
   
 protected:
   NamedPipePtr pipeClientServer_;
   NamedPipePtr pipeServerClient_;
-  NamedPipeReader serverReader_;
+  NamedPipeReader* serverReader_;
 };
 
 class OwnedPipeChannel : public PipeChannel

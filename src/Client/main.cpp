@@ -22,6 +22,7 @@ int main(void)
     std::cout << answer << std::endl;
   }
 
+  client.getQueryBQ().push(Client::BREAK_COMMAND);
   th.join();
 
   return 0;

@@ -147,15 +147,14 @@ void NamedPipeWriter::write(const std::string& data)
 
 PipeChannel::PipeChannel(NamedPipePtr pipeClientServer, NamedPipePtr pipeServerClient)
   : pipeClientServer_(pipeClientServer),
-    pipeServerClient_(pipeServerClient),
-    serverReader_(pipeClientServer_)
+    pipeServerClient_(pipeServerClient)
 {
-  assert(serverReader_.tryOpen());
+  ensureServerReaderOpened();
 }
 
 PipeChannel::~PipeChannel()
-{
-  serverReader_.close();
+{  
+  ensureServerReaderClosed();
 }
 
 OwnedPipeChannel::OwnedPipeChannel(int lindaId)
@@ -175,16 +174,37 @@ NamedPipeReader PipeChannel::getClientReader()
 
 NamedPipeWriter PipeChannel::getClientWriter()
 {
+  ensureServerReaderClosed();
   return NamedPipeWriter(pipeClientServer_);
 }
 
 NamedPipeReader& PipeChannel::getServerReader()
 {
-  return serverReader_;
+  ensureServerReaderOpened();
+  return *serverReader_;
 }
 
 NamedPipeWriter PipeChannel::getServerWriter()
 {
   return NamedPipeWriter(pipeServerClient_);
+}
+
+void PipeChannel::ensureServerReaderClosed()
+{
+  if(!serverReader_)
+    return;
+
+  serverReader_->close();
+  delete serverReader_;
+  serverReader_ = NULL;
+}
+
+void PipeChannel::ensureServerReaderOpened()
+{
+  if(serverReader_)
+    return;
+
+  serverReader_ = new NamedPipeReader(pipeClientServer_);
+  assert(serverReader_->tryOpen());
 }
 

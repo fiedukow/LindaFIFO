@@ -9,6 +9,7 @@ class Client
 {
 public:
   Client();
+  Client(const Client&) = delete;
   ~Client();
   void operator()();
   
