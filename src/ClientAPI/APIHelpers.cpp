@@ -35,12 +35,18 @@ std::string generalQueryHandler(const std::string& query)
 
 Operation::Type checkQueryType(const std::string& query)
 {
-  Parser parser;
-  Operation* op = parser.parse(query.c_str());
-  Operation::Type type = op->type;
-
-  delete op;
-  return type;
+  try
+  {
+    Parser parser;
+    Operation* op = parser.parse(query.c_str());
+    Operation::Type type = op->type;
+    delete op;
+    return type;
+  }
+  catch(...) //Parses thorws something stupid so i dont care for now.
+  {
+    throw InvalidQueryException();
+  }
 }
 
 }//namespace Linda
