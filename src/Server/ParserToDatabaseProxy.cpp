@@ -127,6 +127,10 @@ Common::FieldCondition::ConditionType ParserToDatabaseProxy::getConditionType(El
       return Common::FieldCondition::Greater;      
     case Element::EQ:
       return Common::FieldCondition::Equal;
+    case Element::GEQ:
+      return Common::FieldCondition::GreaterEqual;
+    case Element::LEQ:
+      return Common::FieldCondition::LessEqual;
   }
 }
 
