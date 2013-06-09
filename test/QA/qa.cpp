@@ -42,17 +42,15 @@ BOOST_AUTO_TEST_CASE( Tests )
 		sleep(1);
 		try 
 		{
-			BOOST_REQUIRE(true);
-			Linda::output("output(\"12\")");
-			BOOST_REQUIRE(true);
+			Linda::output("output(12)");
+      BOOST_CHECK(Linda::read("read(integer:<20, 3)") == "(12)");
+      BOOST_CHECK(Linda::input("input(integer:*, 3)") == "(12)");
 		} 
-
 		catch (std::exception& e)  
 		{	
 			//printf ("Kurdele fail!!! \n");
 			//expected if the query is invalid. It looks valid anyway. 
-			BOOST_CHECK(true);
-			
+			BOOST_CHECK(false);
 		}	
 		catch (...)  
 		{	
