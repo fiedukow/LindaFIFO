@@ -147,7 +147,8 @@ void NamedPipeWriter::write(const std::string& data)
 
 PipeChannel::PipeChannel(NamedPipePtr pipeClientServer, NamedPipePtr pipeServerClient)
   : pipeClientServer_(pipeClientServer),
-    pipeServerClient_(pipeServerClient)
+    pipeServerClient_(pipeServerClient),
+    serverReader_(NULL)
 {
   ensureServerReaderOpened();
 }
