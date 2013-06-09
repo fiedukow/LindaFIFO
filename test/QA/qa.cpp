@@ -31,7 +31,15 @@ BOOST_AUTO_TEST_CASE( Tests )
 		
 		execl("./bin/Server", (char *) 0);	
 	} else 
+		// "give me some breath" - your server.
+
 	{	
+		printf ("Starting Queries in 3... \n");
+		sleep(1);
+		printf ("2... \n");
+		sleep(1);
+		printf ("1... \n");
+		sleep(1);
 		try 
 		{
 			BOOST_REQUIRE(true);
@@ -50,6 +58,7 @@ BOOST_AUTO_TEST_CASE( Tests )
 		{	
 			//printf ("O kurdele uber fail! \n");
 			//totally unexpected. 
+			kill(server, SIGUSR1);
 			BOOST_CHECK(false);
 			
 		}	
