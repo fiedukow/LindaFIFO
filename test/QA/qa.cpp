@@ -35,7 +35,7 @@ BOOST_AUTO_TEST_CASE( Tests )
 		try 
 		{
 			BOOST_REQUIRE(true);
-			Linda::output("12");
+			Linda::output("output(\"12\")");
 			BOOST_REQUIRE(true);
 		} 
 
