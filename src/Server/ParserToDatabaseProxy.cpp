@@ -48,6 +48,11 @@ std::string ParserToDatabaseProxy::getLastOperationAnswer() const
   return lastOperationAnswer_;
 }
 
+time_t ParserToDatabaseProxy::getLastOperationTimeout() const
+{
+  return lastOperationTimeout_;
+}
+
 void ParserToDatabaseProxy::handleSelectOperation(OperationPtr operation)
 { 
   Common::SelectDescription selectDesc = buildSelectDescription(operation);
@@ -70,6 +75,7 @@ void ParserToDatabaseProxy::handleSelectOperation(OperationPtr operation)
   catch(Exceptions::TupleDoesNotExistException& e)
   {
     lastOperationWaiting_ = true;
+    lastOperationTimeout_ = (time_t) operation->timeout;
     lastOperationAdded_ = false;
     lastOperationAnswer_ = Linda::Messages::TIMEOUT_MESSAGE;
     return;

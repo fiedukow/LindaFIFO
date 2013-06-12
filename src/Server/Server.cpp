@@ -107,7 +107,7 @@ void Server::handleIncomingQueries()
     std::cout << "Incoming message: " << msg << std::endl;
     std::string answer = handleQuery(msg);
     if(answer == Linda::Messages::TIMEOUT_MESSAGE)
-      waitingQueue_.push_back(WaitingQuery(time(NULL) + 15, msg, client));
+      waitingQueue_.push_back(WaitingQuery(time(NULL) + lastTimeout_, msg, client));
     else
       answerQueue_.push_back(AddressedAnswer(client, answer));
   } 
@@ -169,7 +169,10 @@ std::string Server::handleQuery(const std::string& query)
   ParserToDatabaseProxy answerHandler(db);
   answerHandler.handleOperation(operation);
   if(answerHandler.shouldLastOperationWait())
+  {
+    lastTimeout_ = answerHandler.getLastOperationTimeout();
     return Linda::Messages::TIMEOUT_MESSAGE;
+  }
   else
     if(answerHandler.hasLastOperationAddedElement())
       handleWaitingQueue();

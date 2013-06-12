@@ -64,6 +64,8 @@ private:
   std::list<AddressedAnswer> answerQueue_;
   std::list<WaitingQuery>   waitingQueue_;
   bool stopped_;
+  time_t lastTimeout_;
+
   Database db;
 };
 

@@ -24,6 +24,7 @@ public:
   bool shouldLastOperationWait() const;
   bool hasLastOperationAddedElement() const;
   std::string getLastOperationAnswer() const;
+  time_t getLastOperationTimeout() const;
 
 private:
   void handleSelectOperation(OperationPtr operation);
@@ -39,6 +40,7 @@ private:
   Database& db_;
   bool lastOperationWaiting_;
   bool lastOperationAdded_;
+  time_t lastOperationTimeout_;
   std::string lastOperationAnswer_;
 };
 
