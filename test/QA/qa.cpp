@@ -86,7 +86,7 @@ BOOST_AUTO_TEST_CASE( Tests )
     BOOST_CHECK(parses_ok("input(55 , 5)"));
     BOOST_CHECK(parses_ok("input(3.14)"));
     BOOST_CHECK(parses_ok("input(\"\")"));
-    BOOST_CHECK(parses_ok("input(\"chuj\")"));
+    BOOST_CHECK(parses_ok("input(\"czosnek\")"));
     BOOST_CHECK(parses_ok("input(\"foo\", \"bar\", \"baz\")"));
     BOOST_CHECK(parses_ok("input(\"fo\\\"o\")"));
     BOOST_CHECK(parses_ok("input(integer:5)"));

@@ -44,7 +44,7 @@ BOOST_AUTO_TEST_CASE( Parser_ok_test )
     BOOST_CHECK(parses_ok("output(55 , 5)"));
     BOOST_CHECK(parses_ok("output(3.14)"));
     BOOST_CHECK(parses_ok("output(\"\")"));
-    BOOST_CHECK(parses_ok("output(\"chuj\")"));
+    BOOST_CHECK(parses_ok("output(\"czosnek\")"));
     BOOST_CHECK(parses_ok("output(\"foo\", \"bar\", \"baz\")"));
     BOOST_CHECK(parses_ok("output(\"fo\\\"o\")"));
     BOOST_CHECK(parses_ok("output(integer:5)"));
@@ -118,10 +118,10 @@ BOOST_AUTO_TEST_CASE( Parser_AST )
     BOOST_CHECK(op->element(0).str_value == "");
     delete op;
 
-    op = parser.parse("output(\"chuj\")");
+    op = parser.parse("output(\"czosnek\")");
     BOOST_CHECK(op->arity() == 1);
     BOOST_CHECK(op->element(0).type == Element::Type::STR);
-    BOOST_CHECK(op->element(0).str_value == "chuj");
+    BOOST_CHECK(op->element(0).str_value == "czosnek");
     delete op;
 
     op = parser.parse("output(\"foo\", \"bar\", \"baz\")");

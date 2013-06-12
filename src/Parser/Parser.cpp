@@ -75,7 +75,7 @@ Operation::Type Parser::operation()
     return Operation::Type::READ;
   }
   die("unrecognized operation");
-  return Operation::Type::INPUT; // fuck off, clang
+  return Operation::Type::INPUT;
 }
 
   std::vector<Element*>*
