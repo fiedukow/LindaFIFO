@@ -93,6 +93,8 @@ void Server::handleNewClientRegistering()
 void Server::handleIncomingQueries()
 {
   std::cout << "Zapytania..." << std::endl;
+  std::list<OwnedPipeChannelPtr> closingConnectionList;
+
   for(OwnedPipeChannelPtr client : clients_)
   {
     NamedPipeReader& reader = client->getServerReader();
@@ -105,12 +107,21 @@ void Server::handleIncomingQueries()
       continue;
 
     std::cout << "Incoming message: " << msg << std::endl;
+
+    if(msg == Linda::Messages::CLOSE_CONNECTION_REQUEST)
+      closingConnectionList.push_back(client);            
+
     std::string answer = handleQuery(msg);
     if(answer == Linda::Messages::TIMEOUT_MESSAGE)
       waitingQueue_.push_back(WaitingQuery(time(NULL) + lastTimeout_, msg, client));
     else
       answerQueue_.push_back(AddressedAnswer(client, answer));
-  } 
+  }
+  
+  for(OwnedPipeChannelPtr toRemove : closingConnectionList)
+    clients_.remove(toRemove); //may be optimized and even made in more precise way
+                              //by changig upper loop to old-style std::list::inteterator
+                              //list and removing using interator like i = remove(i);
 }
 
 void Server::handleAnswers()

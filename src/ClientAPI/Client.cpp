@@ -1,5 +1,6 @@
 #include "Client.h"
 #include <Common/NamedPipe.h>
+#include <Common/MagicMessages.h>
 #include <iostream>
 #include <boost/lexical_cast.hpp>
 #include <ClientAPI/API.h>
@@ -31,10 +32,12 @@ void Client::operator()()
   {
     queryBQ_.pop(query);
     if(query == BREAK_COMMAND)
-      break;
+      query = Linda::Messages::CLOSE_CONNECTION_REQUEST;  
     writer.open();
     writer.write(query);
     writer.close();
+    if(query == Linda::Messages::CLOSE_CONNECTION_REQUEST)
+      break;
     reader.open();
     answerBQ_.push(reader.read());
     reader.close();
