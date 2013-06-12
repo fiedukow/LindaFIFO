@@ -26,6 +26,7 @@ Server::Server()
     stopped_(false)
 {
   signal(SIGINT, &signalHandler);
+  signal(SIGTERM, &signalHandler);
   I_DONT_WANT_TO_LIVE_ON_THIS_PLANET_ANYMORE = this;
 }
 
@@ -48,6 +49,7 @@ void Server::handlePosixSignal(int signal)
   switch(signal)
   {
     case SIGINT:
+    case SIGTERM:
       stop();
       break;
     case SIGPIPE:

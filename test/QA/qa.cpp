@@ -50,8 +50,15 @@ BOOST_AUTO_TEST_CASE( Tests )
       }
       else
       {
+        try
+        {
         for(int i = 0; i < 2000; ++i)
           BOOST_CHECK(Linda::input("input(integer:*, 3)") == "(12)");
+        }
+        catch(std::exception& e)
+        {
+          std::cout << e.what() << std::endl;
+        }
       }
 			Linda::output("output(12)");
       BOOST_CHECK(Linda::read("read(integer:<20, 3)") == "(12)");
@@ -67,12 +74,12 @@ BOOST_AUTO_TEST_CASE( Tests )
 		{	
 			//printf ("O kurdele uber fail! \n");
 			//totally unexpected. 
-			kill(server, SIGUSR1);
+			kill(server, SIGTERM);
 			BOOST_CHECK(false);
 			
 		}	
 		//Linda::input();
-		kill(server, SIGUSR1);
+		kill(server, SIGTERM);
 		//printf ("O kurdele udalo sie222!!! \n");
 	}
 

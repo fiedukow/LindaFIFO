@@ -61,6 +61,7 @@ BOOST_AUTO_TEST_CASE( Parser_ok_test )
     BOOST_CHECK(parses_ok("output(5.0)"));
     BOOST_CHECK(parses_ok("output(4.34)"));
     BOOST_CHECK(parses_ok("output(string:==\"foo\")"));
+    BOOST_CHECK(parses_ok("read(integer:*,string:\"93\",string:*,2)"));
 }
 
 BOOST_AUTO_TEST_CASE( Parser_AST )
