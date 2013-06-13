@@ -44,45 +44,54 @@ BOOST_AUTO_TEST_CASE( Tests_simple )
 			Linda::output("output(111)");
 			BOOST_CHECK(Linda::input("input(integer:==111, 3)").compare("(111)")==0);
 
-			Linda::output("output(111.1)");
-			std::string s1 = Linda::input("input(float:>100.0, 3)");
-			std::cout << s1 << std::endl;
-			BOOST_CHECK(s1.compare("(111.1)")==0);
 
 			Linda::output("output(\"123\")");
 			std::string s2 = Linda::input("input(string:\"123\", 3)");
-			std::cout << s2 << std::endl;
+//			std::cout << s2 << std::endl;
 			BOOST_CHECK(s2.compare("(\"123\")")==0);
 
 
-			/*BOOST_CHECK(Linda::read("read(integer:<20, 3)") == "(12)");
-      			BOOST_CHECK(Linda::input("input(integer:*, 3)") == "(12)");
-      			if(forked == 0)
-      			{
-        			for(int i = 0; i < 2000; ++i) Linda::output("output(12)");
-        			while (true) 
-				{
-					sleep(10);
-				}		
-      			} else
-      			{
-        			try
-       				{
-        				for(int i = 0; i < 2000; ++i)
-          					BOOST_CHECK(Linda::input("input(integer:*, 3)") == "(12)");
-        			}
-        			catch(std::exception& e)
-        			{
-          				std::cout << e.what() << std::endl;
-       				}
-        			catch(...)
-        			{
-					std::cout << "damn" << std::endl;
-       				}
-      			}
-			Linda::output("output(12)");
-      			BOOST_CHECK(Linda::read("read(integer:<20, 3)") == "(12)");
-      			BOOST_CHECK(Linda::input("input(integer:*, 3)") == "(12)");*/
+			Linda::output("output(23)");
+			BOOST_CHECK(Linda::read("read(integer:==23, 3)").compare("(23)")==0);
+			BOOST_CHECK(Linda::read("read(integer:==23, 3)").compare("(24)")!=0);
+			BOOST_CHECK(Linda::input("input(integer:==23, 3)").compare("(23)")==0);
+
+
+			Linda::output("output(1,2,3)");
+//std::cout << Linda::read("read(integer:==1,integer:==2,integer:==3, 3)") << std::endl;
+			BOOST_CHECK(Linda::read("read(integer:==1,integer:==2,integer:==3, 3)").compare("(1, 2, 3)")==0);
+			BOOST_CHECK(Linda::read("read(integer:>=1,integer:<=2,integer:>=3, 3)").compare("(1, 2, 3)")==0);
+			try 
+			{
+				BOOST_CHECK(Linda::read("I am invalid query").compare("(1, 2, 3)")!=0);	
+				BOOST_CHECK(false);
+			}			
+			catch(Linda::InvalidQueryException& e) 
+			{
+			}
+			catch (...)
+			{
+				BOOST_CHECK(false);
+			}
+			BOOST_CHECK(Linda::read("read(integer:>=1,integer:<=2,integer:>=3, 3)").compare("(1, 2, 3)")==0);
+			BOOST_CHECK(Linda::read("read(integer:*,integer:*,integer:*, 3)").compare("(1, 2, 3)")==0);
+
+			Linda::output("output(1,\"123\")");
+			BOOST_CHECK(Linda::input("input(integer:*,integer:*,integer:*, 3)").compare("(1, 2, 3)")==0);
+			BOOST_CHECK(Linda::input("input(integer:*,string:*, 3)").compare("(1, \"123\")")==0);
+			try 
+			{
+				BOOST_CHECK(Linda::read("input(integer:*,string:*, 3)").compare("(1, 2, 3)")!=0);	
+				BOOST_CHECK(false);
+			}			
+			catch(Linda::InvalidQueryTypeException& e) 
+			{
+			}
+			catch (...)
+			{
+				BOOST_CHECK(false);
+			}
+
 		} 
 		catch (std::exception& e)  
 		{	
@@ -92,7 +101,6 @@ BOOST_AUTO_TEST_CASE( Tests_simple )
 		}	
 		catch (...)  
 		{	
-			////printf ("O kurdele uber fail! \n");
 			//totally unexpected. 
 			kill(server, SIGTERM);
 			BOOST_CHECK(false);
@@ -100,7 +108,7 @@ BOOST_AUTO_TEST_CASE( Tests_simple )
 		}	
 		//Linda::input();
 		kill(server, SIGTERM);
-		//printf ("O kurdele udalo sie222!!! \n");
+		std::cout << "Killed server no 1" << std::endl;
 	}
 }
 
@@ -133,34 +141,8 @@ BOOST_AUTO_TEST_CASE( Tests )
 		sleep(1);
 		try 
 		{
-			int forked=fork();
-      			if(forked == 0)
-      			{
-        			for(int i = 0; i < 2000; ++i) Linda::output("output(12)");
-        			while (true) 
-				{
-					sleep(10);
-				}		
-      			} else
-      			{
-        			try
-       				{
-        				for(int i = 0; i < 2000; ++i)
-          				BOOST_CHECK(Linda::input("input(integer:*, 3)") == "(12)");
-        			}
-        			catch(std::exception& e)
-        			{
-          				std::cout << e.what() << std::endl;
-       				}
-        			catch(...)
-        			{
-					std::cout << "damn" << std::endl;
-       				}
-      			}
-			Linda::output("output(12)");
-      			BOOST_CHECK(Linda::read("read(integer:<20, 3)") == "(12)");
-      			BOOST_CHECK(Linda::input("input(integer:*, 3)") == "(12)");
-			kill(forked, SIGTERM);
+			Linda::output("output(100,200,300)");
+			BOOST_CHECK(Linda::input("input(integer:<500,integer:==200,integer:>0, 3)").compare("(100, 200, 300)")==0);
 		} 
 		catch (std::exception& e)  
 		{	
@@ -170,9 +152,6 @@ BOOST_AUTO_TEST_CASE( Tests )
 		}	
 		catch (...)  
 		{	
-			////printf ("O kurdele uber fail! \n");
-			//totally unexpected. 
-			kill(server, SIGTERM);
 			BOOST_CHECK(false);
 			
 		}	
