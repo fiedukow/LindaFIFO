@@ -59,7 +59,7 @@ StringField::StringField(const std::string& value)
 
 std::string StringField::asString() const
 {
-  return value;
+  return "\"" + value + "\"";
 }
 
 bool StringField::accept(const FieldCondition& fc) const
