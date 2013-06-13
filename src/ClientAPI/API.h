@@ -10,21 +10,25 @@ typedef std::string Tuple;
 
 class InvalidQueryException : public std::exception
 {
+public:
   const char* what() const throw();
 };
 
 class InvalidQueryTypeException : public std::exception
 {
+public:
   const char* what() const throw();
 };
 
 class QueryTimeoutException : public std::exception
 {
+public:
   const char* what() const throw();
 };
 
 class ServerInactiveException : public std::exception
 {
+public:
   const char* what() const throw();
 };
 
