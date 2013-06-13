@@ -236,6 +236,13 @@ BOOST_AUTO_TEST_CASE( Parser_AST )
     BOOST_CHECK(op->element(0).constraint == Element::Constraint::ANY);
     BOOST_CHECK(op->timeout == 3.0);
     delete op;
+
+    op = parser.parse("output(111.1)");
+    BOOST_CHECK(op->arity() == 1);
+    BOOST_CHECK(op->element(0).type == Element::Type::NUM);
+    BOOST_CHECK(op->element(0).constraint == Element::Constraint::EQ);
+    BOOST_CHECK(op->element(0).num_value == 111.1);
+    delete op;
 }
 
 BOOST_AUTO_TEST_CASE( Parser_fail_test )

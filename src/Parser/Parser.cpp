@@ -150,7 +150,7 @@ Parser::parse_numeric()
     }
     if (isdigit(source[cur])) {
         double val = (double)parse_int();
-        while (val > 1) val /= 10;
+        while (val >= 1) val /= 10;
         num = num + val * factor;
     } else if (factor == 1) { // nothing after .
         die("Malformed numeric");
