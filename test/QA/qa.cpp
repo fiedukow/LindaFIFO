@@ -146,7 +146,7 @@ BOOST_AUTO_TEST_CASE( Tests )
         			try
        				{
         				for(int i = 0; i < 2000; ++i)
-          					BOOST_CHECK(Linda::input("input(integer:*, 3)") == "(12)");
+          				BOOST_CHECK(Linda::input("input(integer:*, 3)") == "(12)");
         			}
         			catch(std::exception& e)
         			{

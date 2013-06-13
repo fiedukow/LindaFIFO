@@ -46,21 +46,20 @@ void Client::operator()()
 
 bool Client::registerInServer()
 {
-  NamedPipePtr regPipe(new NamedPipe("/tmp/LINDA_REGISTER_PIPE"));
-  NamedPipeReader reader(regPipe);
-  if(!reader.open())
-    return false;
+  std::string pipeId = "";
 
-  std::string pipeId = reader.read();
-  if(pipeId.empty())
+  while(pipeId.empty())
   {
+    NamedPipePtr regPipe(new NamedPipe("/tmp/LINDA_REGISTER_PIPE"));
+    NamedPipeReader reader(regPipe);
+    if(!reader.open())
+      return false;
+
+    pipeId = reader.read();
     reader.close();
-    return registerInServer();
   }
 
-  reader.close();
   channel_ = new WeakPipeChannel(boost::lexical_cast<int>(pipeId));
-  
   return true;
 }
 
