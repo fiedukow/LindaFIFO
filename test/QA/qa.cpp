@@ -44,10 +44,10 @@ BOOST_AUTO_TEST_CASE( Tests_simple )
 			Linda::output("output(111)");
 			BOOST_CHECK(Linda::input("input(integer:==111, 3)").compare("(111)")==0);
 
-
 			Linda::output("output(\"123\")");
 			std::string s2 = Linda::input("input(string:\"123\", 3)");
-//			std::cout << s2 << std::endl;
+//    BOOST_CHECK_THROW(Linda::input("input(string:*,1)"), Linda::QueryTimeoutException);
+//		std::cout << s2 << std::endl;
 			BOOST_CHECK(s2.compare("(\"123\")")==0);
 
 
@@ -58,7 +58,7 @@ BOOST_AUTO_TEST_CASE( Tests_simple )
 
 
 			Linda::output("output(1,2,3)");
-//std::cout << Linda::read("read(integer:==1,integer:==2,integer:==3, 3)") << std::endl;
+      //std::cout << Linda::read("read(integer:==1,integer:==2,integer:==3, 3)") << std::endl;
 			BOOST_CHECK(Linda::read("read(integer:==1,integer:==2,integer:==3, 3)").compare("(1, 2, 3)")==0);
 			BOOST_CHECK(Linda::read("read(integer:>=1,integer:<=2,integer:>=3, 3)").compare("(1, 2, 3)")==0);
 			try 
